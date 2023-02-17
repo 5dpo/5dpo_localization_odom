@@ -19,15 +19,18 @@ class OdomWhOmni4 : public OdomWh {
   OdomWhOmni4(const std::vector<size_t>& wh_idx,
       const std::vector<double>& wh_d, const std::vector<double>& rob_len);
 
-  OdomWhType getOdomWhType() override;
+  inline OdomWhType getOdomWhType() const override {
+    return OdomWhType::kOmni4Wh;
+  }
 
   void setMotorDriveEncTicksDelta(const size_t& idx, const int32_t& delta_ticks,
       const double& ticks_rev) override;
   void setMotorDriveW(const size_t& idx, const double& w_curr) override;
+  double getMotorDriveWr(const size_t& idx) override;
 
   void setVelRef(const double& v, const double& vn, const double& w) override;
 
-  void update() override;
+  void updateOdomDelta() override;
 };
 
 } // namespace sdpo_ros_odom

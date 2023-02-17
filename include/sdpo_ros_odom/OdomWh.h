@@ -32,18 +32,32 @@ class OdomWh {
  public:
   OdomWh() = default;
   OdomWh(const std::vector<size_t>& wh_idx, const std::vector<double>& wh_d,
-      const std::vector<double>& rob_len);
+      const std::vector<double>& rob_len) { }
 
-  virtual OdomWhType getOdomWhType();
+  inline virtual OdomWhType getOdomWhType() const {
+    return OdomWhType::kUnknown;
+  }
 
   virtual void setMotorDriveEncTicksDelta(const size_t& idx,
       const int32_t& delta_ticks, const double& ticks_rev) = 0;
   virtual void setMotorDriveW(const size_t& idx, const double& w_curr) = 0;
+  virtual double getMotorDriveWr(const size_t& idx) = 0;
 
   virtual void setVelRef(const double& v, const double& vn,
       const double& w) = 0;
 
-  virtual void update() = 0;
+  void update() {
+    updateOdomDelta();
+    updateOdomPose();
+  }
+
+ private:
+  virtual void updateOdomDelta() = 0;
+  void updateOdomPose() {
+    pose.x += odo.x_delta;
+    pose.y += odo.y_delta;
+    pose.th += odo.th_delta;
+  }
 };
 
 } // namespace sdpo_ros_odom
