@@ -157,7 +157,7 @@ bool OdomWhROS::readParam() {
 };
 
 void OdomWhROS::subMotEnc(const sdpo_ros_interfaces_hw::mot_enc_array& msg) {
-  /*try {
+  try {
     for(int i = 0; i < msg.mot_enc_array_data.size(); i++) {
       odom_->setMotorDriveEncTicksDelta(
           i, msg.mot_enc_array_data[i].encoder_delta,
@@ -179,8 +179,8 @@ void OdomWhROS::subMotEnc(const sdpo_ros_interfaces_hw::mot_enc_array& msg) {
     odom2base_tf.setOrigin(tf::Vector3(odom_->pose.x, odom_->pose.y, 0.0));
     odom2base_tf.setRotation(tf::createQuaternionFromYaw(odom_->pose.th));
     odom2base_tf.stamp_ = msg.stamp;
-    odom2base_tf.frame_id_ = "odom";
-    odom2base_tf.child_frame_id_ = "base";
+    odom2base_tf.frame_id_ = odom_frame_id_;
+    odom2base_tf.child_frame_id_ = base_frame_id_;
     tf_broad_.sendTransform(odom2base_tf);
 
     nav_msgs::Odometry odom_msg;
@@ -201,17 +201,17 @@ void OdomWhROS::subMotEnc(const sdpo_ros_interfaces_hw::mot_enc_array& msg) {
   } catch (std::exception& e) {
     ROS_ERROR("[sdpo_ros_odom] Error when processing the motor encoders data "
               "message (%s)", e.what());
-  }*/
+  }
 }
 
 void OdomWhROS::subCmdVel(const geometry_msgs::Twist& msg) {
-  /*odom_->setVelRef(msg.linear.x, msg.linear.y, msg.angular.z);
+  odom_->setVelRef(msg.linear.x, msg.linear.y, msg.angular.z);
 
   sdpo_ros_interfaces_hw::mot_ref mot_ref_msg;
   mot_ref_msg.angular_speed_ref.resize(odom_->mot.size());
   for(int i = 0; i < odom_->mot.size(); i++) {
     mot_ref_msg.angular_speed_ref[i] = odom_->getMotorDriveWr(i);
-  }*/
+  }
 }
 
 } // namespace sdpo_ros_odom
