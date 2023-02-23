@@ -28,6 +28,9 @@ class OdomWhROS {
   tf::TransformBroadcaster tf_broad_;
 
   std::unique_ptr<OdomWh> odom_;
+  std::string base_frame_id_;
+  std::string odom_frame_id_;
+  std::string steering_geometry_;
 
  public:
   OdomWhROS();

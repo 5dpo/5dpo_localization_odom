@@ -7,16 +7,17 @@ namespace sdpo_ros_odom {
 
 std::vector<size_t> idx2valueVector(const std::vector<size_t>& vec_ini) {
   auto min_value_it = std::min_element(vec_ini.begin(), vec_ini.end());
-  auto max_value_it = std::max(vec_ini.begin(), vec_ini.end());
+  auto max_value_it = std::max_element(vec_ini.begin(), vec_ini.end());
   // Error verification
   // - vector has a valid minimum and maximum element
-  if ((min_value_it == vec_ini.end()) || (max_value_it == vec_ini.end())) {
+  if ((vec_ini.size() <= 1) || ((*min_value_it) == (*max_value_it))) {
     throw std::invalid_argument(
         "[utils.cpp] idx2valueVector: invalid vector to convert index 2 range "
         "and vice-versa");
   }
   // - minimum must be 0 + maximum value must be size vector - 1
   if ((*min_value_it != 0) || (*max_value_it != vec_ini.size()-1)) {
+    std::cout << *min_value_it << " " << *max_value_it << std::endl;
     throw std::invalid_argument(
         "[utils.cpp] idx2valueVector: invalid vector (range: 0..n-1; "
         "unique values: 0..n-1)");

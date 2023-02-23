@@ -6,12 +6,14 @@
 namespace sdpo_ros_odom {
 
 OdomWhOmni4::OdomWhOmni4(const std::vector<size_t>& wh_idx,
-    const std::vector<double>& wh_d, const std::vector<double>& rob_len) {
-  if ((wh_idx.size() != 4) || (wh_d.size() != 4) || (rob_len.size() != 2)) {
+    const std::vector<double>& wh_d, const std::vector<bool>& wh_inv,
+    const std::vector<double>& rob_len) {
+  if ((wh_idx.size() != 4) || (wh_d.size() != 4) || (wh_inv.size() != 4) ||
+      (rob_len.size() != 2)) {
     throw std::invalid_argument(
         "[OdomWhOmni4.cpp] OdomWhOmni4::OdomWhOmni4: "
-        "number expected of arguments is 4 wheel motors (diameter and index) "
-        "and 2 distances (front-to-back and left-to-right wheels)");
+        "number expected of arguments is 4 wheel motors (index, diameter, "
+        "inverted) and 2 distances (front-to-back and left-to-right wheels)");
   }
 
   // Initialization
@@ -34,6 +36,12 @@ OdomWhOmni4::OdomWhOmni4(const std::vector<size_t>& wh_idx,
   mot[kWhIdxBL].wh_d = wh_d[kWhIdxBL];
   mot[kWhIdxBR].wh_d = wh_d[kWhIdxBR];
 
+  // Wheel invert direction
+  mot[kWhIdxFL].inverted = wh_inv[kWhIdxFL];
+  mot[kWhIdxFR].inverted = wh_inv[kWhIdxFR];
+  mot[kWhIdxBL].inverted = wh_inv[kWhIdxBL];
+  mot[kWhIdxBR].inverted = wh_inv[kWhIdxBR];
+
   // Robot odometry geometric distances
   rob_l[kRobLenIdxF2B] = rob_len[kRobLenIdxF2B];
   rob_l[kRobLenIdxL2R] = rob_len[kRobLenIdxL2R];
@@ -50,6 +58,16 @@ void OdomWhOmni4::setMotorDriveW(const size_t &idx, const double &w_curr) {
 
 double OdomWhOmni4::getMotorDriveWr(const size_t& idx) {
   return mot[mot_idx[idx]].w_r;
+}
+
+std::string OdomWhOmni4::getMotorDriveIdxStr(const size_t& idx) {
+  switch (mot_idx[idx]) {
+  case kWhIdxFL: return "FL";
+  case kWhIdxFR: return "FR";
+  case kWhIdxBL: return "BL";
+  case kWhIdxBR: return "BR";
+  default: return "nan";
+  }
 }
 
 void OdomWhOmni4::setVelRef(const double &v, const double &vn,

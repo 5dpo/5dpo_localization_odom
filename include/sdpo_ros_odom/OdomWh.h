@@ -32,7 +32,7 @@ class OdomWh {
  public:
   OdomWh() = default;
   OdomWh(const std::vector<size_t>& wh_idx, const std::vector<double>& wh_d,
-      const std::vector<double>& rob_len) { }
+      const std::vector<bool>& wh_inv, const std::vector<double>& rob_len) { }
 
   inline virtual OdomWhType getOdomWhType() const {
     return OdomWhType::kUnknown;
@@ -42,6 +42,7 @@ class OdomWh {
       const int32_t& delta_ticks, const double& ticks_rev) = 0;
   virtual void setMotorDriveW(const size_t& idx, const double& w_curr) = 0;
   virtual double getMotorDriveWr(const size_t& idx) = 0;
+  virtual std::string getMotorDriveIdxStr(const size_t& idx) = 0;
 
   virtual void setVelRef(const double& v, const double& vn,
       const double& w) = 0;
