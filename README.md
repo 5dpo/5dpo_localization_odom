@@ -1,6 +1,6 @@
 # 5dpo_ros_odom
 
-**Version 0.0.0**
+**Version 1.0.0**
 
 This repository implements a data processor for the estimation of the robot pose
 based on odometric-only data (e.g., wheeled, laser, visual, and/or inertial
@@ -10,11 +10,13 @@ reckoning pose estimation of the robot.
 
 **With this version, it is possible to do:**
 
-- TBD
+- Wheeled odometry (four-wheeled omnidirectional steering geometry)
 
 **The next version will add these features:**
 
-- Wheeled odometry
+- Wheeled odometry (differential and three-wheeled omnidirectional steering
+  geometries)
+- Wheeled odometry (tricycle steering geometry)
 - Fusion of wheels and inertial odometry data
 
 ## ROS
@@ -102,11 +104,24 @@ None.
 
 ### Build
 
-TBC
+```sh
+# Create catkin workspace
+mkdir -p ~/catkin_ws/src
+
+# Clone repository
+cd ~/catkin_ws/src
+git clone git@github.com:5dpo/5dpo_ros_odom.git
+
+# Build
+cd ..
+catkin build
+```
 
 ### Launch
 
-TBC
+```sh
+roslaunch sdpo_ros_odom sdpo_ros_odom_wh.launch
+```
 
 ## Contacts
 
