@@ -28,6 +28,12 @@ reckoning pose estimation of the robot.
 
 ### Dependencies
 
+- [roscpp](https://wiki.ros.org/roscpp)
+- [geometry_msgs](https://wiki.ros.org/geometry_msgs)
+- [nav_msgs](https://wiki.ros.org/nav_msgs)
+- [sdpo_ros_interfaces_hw](https://github.com/5dpo/5dpo_ros_interfaces)
+- [tf](https://wiki.ros.org/tf)
+
 ### Parameters
 
 - base_frame_id (`std::string = "base_footprint"`): tf frame id of the robot
