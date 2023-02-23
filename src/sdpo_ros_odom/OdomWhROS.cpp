@@ -212,6 +212,8 @@ void OdomWhROS::subCmdVel(const geometry_msgs::Twist& msg) {
   for(int i = 0; i < odom_->mot.size(); i++) {
     mot_ref_msg.angular_speed_ref[i] = odom_->getMotorDriveWr(i);
   }
+
+  pub_mot_ref_.publish(mot_ref_msg);
 }
 
 } // namespace sdpo_ros_odom

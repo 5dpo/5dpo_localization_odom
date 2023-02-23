@@ -72,10 +72,14 @@ std::string OdomWhOmni4::getMotorDriveIdxStr(const size_t& idx) {
 
 void OdomWhOmni4::setVelRef(const double &v, const double &vn,
     const double &w) {
-  mot[kWhIdxFL].setVr( v - vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R])/2);
-  mot[kWhIdxFR].setVr(-v - vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R])/2);
-  mot[kWhIdxBL].setVr( v + vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R])/2);
-  mot[kWhIdxBR].setVr(-v + vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R])/2);
+  mot[kWhIdxFL].setVr(
+       v - vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R]) * w /2);
+  mot[kWhIdxFR].setVr(
+      -v - vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R]) * w /2);
+  mot[kWhIdxBL].setVr(
+       v + vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R]) * w /2);
+  mot[kWhIdxBR].setVr(
+      -v + vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R]) * w /2);
 }
 
 void OdomWhOmni4::updateOdomDelta() {
