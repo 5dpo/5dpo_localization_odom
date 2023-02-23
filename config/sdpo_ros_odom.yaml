@@ -1,0 +1,18 @@
+base_frame_id: "base_footprint"
+odom_frame_id: "odom"
+
+steering_geometry: "omni4"
+rob_dist_between_front_back_wh: 0.265
+rob_dist_between_left_right_wh: 0.270
+wh_front_left_diam: 0.102
+wh_front_left_idx: 3
+wh_front_left_inv: true
+wh_front_right_diam: 0.102
+wh_front_right_idx: 2
+wh_front_right_inv: true
+wh_back_left_diam: 0.102
+wh_back_left_idx: 1
+wh_back_left_inv: true
+wh_back_right_diam: 0.102
+wh_back_right_idx: 0
+wh_back_right_inv: true
