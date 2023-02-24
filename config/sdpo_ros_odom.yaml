@@ -1,6 +1,7 @@
 base_frame_id: "base_footprint"
 odom_frame_id: "odom"
 
+# Four-Wheeled Omnidirectional
 steering_geometry: "omni4"
 rob_dist_between_front_back_wh: 0.265
 rob_dist_between_left_right_wh: 0.270
@@ -16,3 +17,26 @@ wh_back_left_inv: true
 wh_back_right_diam: 0.102
 wh_back_right_idx: 0
 wh_back_right_inv: true
+
+# Three-Wheled Omnidirectional
+#steering_geometry: "omni3"
+#rob_dist_center_wh: 0.191367
+#wh_front_right_diam: 0.098566
+#wh_front_right_idx: 0
+#wh_front_right_inv: true
+#wh_front_left_diam: 0.098566
+#wh_front_left_idx: 1
+#wh_front_left_inv: true
+#wh_back_diam: 0.098566
+#wh_back_idx: 2
+#wh_back_inv: true
+
+# Differential Drive
+#steering_geometry: "diff"
+#rob_dist_between_wh: 0.20
+#wh_right_diam: 0.06
+#wh_right_idx: 0
+#wh_right_inv: true
+#wh_left_diam: 0.06
+#wh_left_idx: 1
+#wh_left_inv: false

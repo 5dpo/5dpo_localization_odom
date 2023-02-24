@@ -9,7 +9,7 @@
 #include <sdpo_ros_interfaces_hw/mot_ref.h>
 #include <tf/transform_broadcaster.h>
 
-#include "sdpo_ros_odom/OdomWhOmni4.h"
+#include "sdpo_ros_odom/OdomWh.h"
 
 namespace sdpo_ros_odom {
 

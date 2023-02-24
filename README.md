@@ -17,6 +17,7 @@ reckoning pose estimation of the robot.
 - Wheeled odometry (differential and three-wheeled omnidirectional steering
   geometries)
 - Wheeled odometry (tricycle steering geometry)
+- Limit the maximum angular speed of the wheels and scale the velocities
 - Fusion of wheels and inertial odometry data
 
 ## ROS
@@ -46,7 +47,19 @@ reckoning pose estimation of the robot.
     robot wheels
   - w_ref_max (`double`): maximum angular speed of the robot wheels
   - Differential drive
-    - TBD
+    - rob_dist_between_wh (`double`): distance between left-right wheels (m)
+    - wh_right_diam (`double`): right wheel diameter (m)
+    - wh_right_idx (`size_t`): right wheel index in the
+      [mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg)
+      (0..1)
+    - wh_right_inv (`bool`): invert positive direction of the right
+      wheel angular motion
+    - wh_left_diam (`double`): left wheel diameter (m)
+    - wh_left_idx (`size_t`): left wheel index in the
+      [mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg)
+      (0..1)
+    - wh_left_inv (`bool`): invert positive direction of the left
+      wheel angular motion
   - Tricycle
     - TBD 
   - Three-wheeled omnidirectional robot

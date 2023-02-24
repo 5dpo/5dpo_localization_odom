@@ -3,6 +3,10 @@
 #include <exception>
 #include <vector>
 
+#include "sdpo_ros_odom/OdomWhDiff.h"
+#include "sdpo_ros_odom/OdomWhOmni3.h"
+#include "sdpo_ros_odom/OdomWhOmni4.h"
+
 namespace sdpo_ros_odom {
 
 static const std::string kOdomWhTypeOmni4Str = "omni4";
@@ -56,21 +60,22 @@ bool OdomWhROS::readParam() {
   nh_private.getParam("steering_geometry", steering_geometry_);
   ROS_INFO("[sdpo_ros_odom] Steering geometry: %s", steering_geometry_.c_str());
 
+  // Four-Wheeled Omnidirectional Robot
   if (steering_geometry_ == kOdomWhOmni4Str) {
     if (!nh_private.hasParam("rob_dist_between_front_back_wh") ||
-            !nh_private.hasParam("rob_dist_between_left_right_wh") ||
+        !nh_private.hasParam("rob_dist_between_left_right_wh") ||
         !nh_private.hasParam("wh_front_left_diam") ||
-            !nh_private.hasParam("wh_front_left_idx") ||
-            !nh_private.hasParam("wh_front_left_inv") ||
+        !nh_private.hasParam("wh_front_left_idx") ||
+        !nh_private.hasParam("wh_front_left_inv") ||
         !nh_private.hasParam("wh_front_right_diam") ||
-            !nh_private.hasParam("wh_front_right_idx") ||
-            !nh_private.hasParam("wh_front_right_inv") ||
+        !nh_private.hasParam("wh_front_right_idx") ||
+        !nh_private.hasParam("wh_front_right_inv") ||
         !nh_private.hasParam("wh_back_left_diam")
-            || !nh_private.hasParam("wh_back_left_idx") ||
-            !nh_private.hasParam("wh_back_left_inv") ||
+        || !nh_private.hasParam("wh_back_left_idx") ||
+        !nh_private.hasParam("wh_back_left_inv") ||
         !nh_private.hasParam("wh_back_right_diam") ||
-            !nh_private.hasParam("wh_back_right_idx") ||
-            !nh_private.hasParam("wh_back_right_inv")) {
+        !nh_private.hasParam("wh_back_right_idx") ||
+        !nh_private.hasParam("wh_back_right_inv")) {
       throw std::runtime_error(
           "[OdomWhROS.cpp] OdomWhROS::readParam: "
           "the steering geometry " + steering_geometry_ + " requires the "
@@ -91,33 +96,33 @@ bool OdomWhROS::readParam() {
 
     // - wheel diameters
     std::vector<double> wh_d(4);
-    nh_private.getParam("wh_front_left_diam" , wh_d[OdomWhOmni4::kWhIdxFL]);
+    nh_private.getParam("wh_front_left_diam", wh_d[OdomWhOmni4::kWhIdxFL]);
     nh_private.getParam("wh_front_right_diam", wh_d[OdomWhOmni4::kWhIdxFR]);
-    nh_private.getParam("wh_back_left_diam"  , wh_d[OdomWhOmni4::kWhIdxBL]);
-    nh_private.getParam("wh_back_right_diam" , wh_d[OdomWhOmni4::kWhIdxBR]);
+    nh_private.getParam("wh_back_left_diam", wh_d[OdomWhOmni4::kWhIdxBL]);
+    nh_private.getParam("wh_back_right_diam", wh_d[OdomWhOmni4::kWhIdxBR]);
 
     // - wheel indexes (getParam não tem overload para size_t....)
     int wh_idx_tmp;
     std::vector<size_t> wh_idx(4);
-    nh_private.getParam("wh_front_left_idx" , wh_idx_tmp);
+    nh_private.getParam("wh_front_left_idx", wh_idx_tmp);
     wh_idx[OdomWhOmni4::kWhIdxFL] = wh_idx_tmp;
     nh_private.getParam("wh_front_right_idx", wh_idx_tmp);
     wh_idx[OdomWhOmni4::kWhIdxFR] = wh_idx_tmp;
-    nh_private.getParam("wh_back_left_idx"  , wh_idx_tmp);
+    nh_private.getParam("wh_back_left_idx", wh_idx_tmp);
     wh_idx[OdomWhOmni4::kWhIdxBL] = wh_idx_tmp;
-    nh_private.getParam("wh_back_right_idx" , wh_idx_tmp);
+    nh_private.getParam("wh_back_right_idx", wh_idx_tmp);
     wh_idx[OdomWhOmni4::kWhIdxBR] = wh_idx_tmp;
 
     // - wheel invert direction
     bool wh_inv_tmp;
     std::vector<bool> wh_inv(4);
-    nh_private.getParam("wh_front_left_inv" , wh_inv_tmp);
+    nh_private.getParam("wh_front_left_inv", wh_inv_tmp);
     wh_inv[OdomWhOmni4::kWhIdxFL] = wh_inv_tmp;
     nh_private.getParam("wh_front_right_inv", wh_inv_tmp);
     wh_inv[OdomWhOmni4::kWhIdxFR] = wh_inv_tmp;
-    nh_private.getParam("wh_back_left_inv"  , wh_inv_tmp);
+    nh_private.getParam("wh_back_left_inv", wh_inv_tmp);
     wh_inv[OdomWhOmni4::kWhIdxBL] = wh_inv_tmp;
-    nh_private.getParam("wh_back_right_inv" , wh_inv_tmp);
+    nh_private.getParam("wh_back_right_inv", wh_inv_tmp);
     wh_inv[OdomWhOmni4::kWhIdxBR] = wh_inv_tmp;
 
     // - create odom object
@@ -147,6 +152,143 @@ bool OdomWhROS::readParam() {
              odom_->mot[OdomWhOmni4::kWhIdxBL].inverted,
              odom_->mot[OdomWhOmni4::kWhIdxBR].inverted);
 
+  // Three-Wheeled Omnidirectional Robot
+  } else if (steering_geometry_ == kOdomWhOmni3Str) {
+    if (!nh_private.hasParam("rob_dist_center_wh") ||
+        !nh_private.hasParam("wh_front_left_diam") ||
+        !nh_private.hasParam("wh_front_left_idx") ||
+        !nh_private.hasParam("wh_front_left_inv") ||
+        !nh_private.hasParam("wh_front_right_diam") ||
+        !nh_private.hasParam("wh_front_right_idx") ||
+        !nh_private.hasParam("wh_front_right_inv") ||
+        !nh_private.hasParam("wh_back_diam") ||
+        !nh_private.hasParam("wh_back_idx") ||
+        !nh_private.hasParam("wh_back_inv")) {
+      throw std::runtime_error(
+          "[OdomWhROS.cpp] OdomWhROS::readParam: "
+          "the steering geometry " + steering_geometry_ + " requires the "
+          "definition of the following parameters: "
+          "rob_dist_center_wh, "
+          "wh_front_right_diam, wh_front_right_idx, wh_front_right_inv, "
+          "wh_front_left_diam, wh_front_left_idx, wh_front_left_inv, "
+          "wh_back_diam, wh_back_idx, wh_back_inv");
+    }
+
+    // - robot lengths
+    std::vector<double> rob_len(1);
+    nh_private.getParam("rob_dist_center_wh", rob_len[OdomWhOmni3::kRobLenIdx]);
+
+    // - wheel diameters
+    std::vector<double> wh_d(3);
+    nh_private.getParam("wh_front_right_diam", wh_d[OdomWhOmni3::kWhIdxFR]);
+    nh_private.getParam("wh_front_left_diam", wh_d[OdomWhOmni3::kWhIdxFL]);
+    nh_private.getParam("wh_back_diam", wh_d[OdomWhOmni3::kWhIdxB]);
+
+    // - wheel indexes (getParam não tem overload para size_t....)
+    int wh_idx_tmp;
+    std::vector<size_t> wh_idx(3);
+    nh_private.getParam("wh_front_right_idx", wh_idx_tmp);
+    wh_idx[OdomWhOmni3::kWhIdxFR] = wh_idx_tmp;
+    nh_private.getParam("wh_front_left_idx", wh_idx_tmp);
+    wh_idx[OdomWhOmni3::kWhIdxFL] = wh_idx_tmp;
+    nh_private.getParam("wh_back_idx", wh_idx_tmp);
+    wh_idx[OdomWhOmni3::kWhIdxB] = wh_idx_tmp;
+
+    // - wheel invert direction
+    bool wh_inv_tmp;
+    std::vector<bool> wh_inv(3);
+    nh_private.getParam("wh_front_right_inv", wh_inv_tmp);
+    wh_inv[OdomWhOmni3::kWhIdxFR] = wh_inv_tmp;
+    nh_private.getParam("wh_front_left_inv", wh_inv_tmp);
+    wh_inv[OdomWhOmni3::kWhIdxFL] = wh_inv_tmp;
+    nh_private.getParam("wh_back_inv", wh_inv_tmp);
+    wh_inv[OdomWhOmni3::kWhIdxB] = wh_inv_tmp;
+
+    // - create odom object
+    odom_.reset(new OdomWhOmni3(wh_idx, wh_d, wh_inv, rob_len));
+
+    // - print parameters
+    ROS_INFO("[sdpo_ros_odom]   Distance center-wheels: %lf m",
+             odom_->rob_l[OdomWhOmni3::kRobLenIdx]);
+    ROS_INFO("[sdpo_ros_odom]   Motor indexes (0 1 2): "
+             "[%s %s %s] (FR|FL|B)",
+             odom_->getMotorDriveIdxStr(0).c_str(),
+             odom_->getMotorDriveIdxStr(1).c_str(),
+             odom_->getMotorDriveIdxStr(2).c_str());
+    ROS_INFO("[sdpo_ros_odom]   Wheel diameters (FR FL B): "
+             "[%lf %lf %lf] m",
+             odom_->mot[OdomWhOmni3::kWhIdxFR].wh_d,
+             odom_->mot[OdomWhOmni3::kWhIdxFL].wh_d,
+             odom_->mot[OdomWhOmni3::kWhIdxB].wh_d);
+    ROS_INFO("[sdpo_ros_odom]   Wheel inverted (FR FL B): "
+             "[%d %d %d] (0|1)",
+             odom_->mot[OdomWhOmni3::kWhIdxFR].inverted,
+             odom_->mot[OdomWhOmni3::kWhIdxFL].inverted,
+             odom_->mot[OdomWhOmni3::kWhIdxB].inverted);
+
+    // Differential Drive Robot
+  } else if (steering_geometry_ == kOdomWhDiffStr) {
+    if (!nh_private.hasParam("rob_dist_between_wh") ||
+        !nh_private.hasParam("wh_left_diam") ||
+        !nh_private.hasParam("wh_left_idx") ||
+        !nh_private.hasParam("wh_left_inv") ||
+        !nh_private.hasParam("wh_right_diam") ||
+        !nh_private.hasParam("wh_right_idx") ||
+        !nh_private.hasParam("wh_right_inv")) {
+      throw std::runtime_error(
+          "[OdomWhROS.cpp] OdomWhROS::readParam: "
+          "the steering geometry " + steering_geometry_ + " requires the "
+          "definition of the following parameters: "
+          "rob_dist_between_wh, "
+          "wh_right_diam, wh_right_idx, wh_right_inv, "
+          "wh_left_diam, wh_left_idx, wh_left_inv");
+    }
+
+    // - robot lengths
+    std::vector<double> rob_len(1);
+    nh_private.getParam("rob_dist_between_wh", rob_len[OdomWhDiff::kRobLenIdx]);
+
+    // - wheel diameters
+    std::vector<double> wh_d(2);
+    nh_private.getParam("wh_right_diam", wh_d[OdomWhDiff::kWhIdxR]);
+    nh_private.getParam("wh_left_diam", wh_d[OdomWhDiff::kWhIdxL]);
+
+    // - wheel indexes (getParam não tem overload para size_t....)
+    int wh_idx_tmp;
+    std::vector<size_t> wh_idx(2);
+    nh_private.getParam("wh_right_idx", wh_idx_tmp);
+    wh_idx[OdomWhDiff::kWhIdxR] = wh_idx_tmp;
+    nh_private.getParam("wh_left_idx", wh_idx_tmp);
+    wh_idx[OdomWhDiff::kWhIdxL] = wh_idx_tmp;
+
+    // - wheel invert direction
+    bool wh_inv_tmp;
+    std::vector<bool> wh_inv(2);
+    nh_private.getParam("wh_right_inv", wh_inv_tmp);
+    wh_inv[OdomWhDiff::kWhIdxR] = wh_inv_tmp;
+    nh_private.getParam("wh_left_inv", wh_inv_tmp);
+    wh_inv[OdomWhDiff::kWhIdxL] = wh_inv_tmp;
+
+    // - create odom object
+    odom_.reset(new OdomWhDiff(wh_idx, wh_d, wh_inv, rob_len));
+
+    // - print parameters
+    ROS_INFO("[sdpo_ros_odom]   Distance between wheels: %lf m",
+             odom_->rob_l[OdomWhDiff::kRobLenIdx]);
+    ROS_INFO("[sdpo_ros_odom]   Motor indexes (0 1): "
+             "[%s %s] (R|L)",
+             odom_->getMotorDriveIdxStr(0).c_str(),
+             odom_->getMotorDriveIdxStr(1).c_str());
+    ROS_INFO("[sdpo_ros_odom]   Wheel diameters (R L): "
+             "[%lf %lf] m",
+             odom_->mot[OdomWhDiff::kWhIdxR].wh_d,
+             odom_->mot[OdomWhDiff::kWhIdxL].wh_d);
+    ROS_INFO("[sdpo_ros_odom]   Wheel inverted (R L): "
+             "[%d %d] (0|1)",
+             odom_->mot[OdomWhDiff::kWhIdxR].inverted,
+             odom_->mot[OdomWhDiff::kWhIdxL].inverted);
+
+  // Unknown steering geometry
   } else {
     throw std::runtime_error(
         "[OdomWhROS.cpp] OdomWhROS::readParam: "
