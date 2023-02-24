@@ -47,19 +47,6 @@ OdomWhOmni4::OdomWhOmni4(const std::vector<size_t>& wh_idx,
   rob_l[kRobLenIdxL2R] = rob_len[kRobLenIdxL2R];
 }
 
-void OdomWhOmni4::setMotorDriveEncTicksDelta(const size_t &idx,
-    const int32_t &delta_ticks, const double &ticks_rev) {
-  mot[mot_idx[idx]].setEncTicksDelta(delta_ticks, ticks_rev);
-}
-
-void OdomWhOmni4::setMotorDriveW(const size_t &idx, const double &w_curr) {
-  mot[mot_idx[idx]].setW(w_curr);
-}
-
-double OdomWhOmni4::getMotorDriveWr(const size_t& idx) {
-  return mot[mot_idx[idx]].w_r;
-}
-
 std::string OdomWhOmni4::getMotorDriveIdxStr(const size_t& idx) {
   switch (mot_idx[idx]) {
   case kWhIdxFL: return "FL";

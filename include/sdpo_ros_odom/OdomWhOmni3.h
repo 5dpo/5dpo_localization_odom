@@ -4,26 +4,24 @@
 
 namespace sdpo_ros_odom {
 
-const std::string kOdomWhOmni4Str = "omni4";
+const std::string kOdomWhOmni3Str = "omni3";
 
-class OdomWhOmni4 : public OdomWh {
+class OdomWhOmni3 : public OdomWh {
  public:
-  static const size_t kWhIdxFL = 0;
-  static const size_t kWhIdxFR = 1;
-  static const size_t kWhIdxBL = 2;
-  static const size_t kWhIdxBR = 3;
+  static const size_t kWhIdxFR = 0;
+  static const size_t kWhIdxFL = 1;
+  static const size_t kWhIdxB = 2;
 
-  static const size_t kRobLenIdxF2B = 0;
-  static const size_t kRobLenIdxL2R = 1;
+  static const size_t kRobLenIdx = 0;
 
  public:
-  OdomWhOmni4() = delete;
-  OdomWhOmni4(const std::vector<size_t>& wh_idx,
+  OdomWhOmni3() = delete;
+  OdomWhOmni3(const std::vector<size_t>& wh_idx,
       const std::vector<double>& wh_d, const std::vector<bool>& wh_inv,
       const std::vector<double>& rob_len);
 
   inline OdomWhType getOdomWhType() const override {
-    return OdomWhType::kOmni4Wh;
+    return OdomWhType::kOmni3Wh;
   }
 
   std::string getMotorDriveIdxStr(const size_t& idx) override;

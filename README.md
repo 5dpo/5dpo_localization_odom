@@ -50,7 +50,26 @@ reckoning pose estimation of the robot.
   - Tricycle
     - TBD 
   - Three-wheeled omnidirectional robot
-    - TBD
+    - rob_dist_center_wh (`double`): distance between the robot geometric center
+      and the omnidirectional wheels (m)
+    - wh_front_right_diam (`double`): front-right wheel diameter (m)
+    - wh_front_right_idx (`size_t`): front-right wheel index in the
+      [mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg)
+      (0..2)
+    - wh_front_right_inv (`bool`): invert positive direction of the front-right
+      wheel angular motion
+    - wh_front_left_diam (`double`): front-left wheel diameter (m)
+    - wh_front_left_idx (`size_t`): front-left wheel index in the
+      [mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg)
+      (0..2)
+    - wh_front_left_inv (`bool`): invert positive direction of the front-left
+      wheel angular motion
+    - wh_back_diam (`double`): back wheel diameter (m)
+    - wh_back_idx (`size_t`): back wheel index in the
+      [mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg)
+      (0..2)
+    - wh_back_inv (`bool`): invert positive direction of the back
+      wheel angular motion
   - Four-wheeled omnidirectional robot
     - rob_dist_between_front_back_wh (`double`): distance between front-back
       wheels (m)
@@ -124,6 +143,8 @@ catkin build
 ```
 
 ### Launch
+
+**sdpo_ros_odom_wh**
 
 ```sh
 roslaunch sdpo_ros_odom sdpo_ros_odom_wh.launch
