@@ -1,6 +1,6 @@
 # 5dpo_ros_odom
 
-**Version 1.0.0**
+**Version 1.1.0**
 
 This repository implements a data processor for the estimation of the robot pose
 based on odometric-only data (e.g., wheeled, laser, visual, and/or inertial
@@ -11,12 +11,13 @@ reckoning pose estimation of the robot.
 **With this version, it is possible to do:**
 
 - Wheeled odometry (four-wheeled omnidirectional steering geometry)
+- Wheeled odometry (differential and three-wheeled omnidirectional steering
+  geometries)
 
 **The next version will add these features:**
 
-- Wheeled odometry (differential and three-wheeled omnidirectional steering
-  geometries)
 - Wheeled odometry (tricycle steering geometry)
+- Limit the maximum angular speed of the wheels and scale the velocities
 - Fusion of wheels and inertial odometry data
 
 ## ROS
@@ -46,11 +47,42 @@ reckoning pose estimation of the robot.
     robot wheels
   - w_ref_max (`double`): maximum angular speed of the robot wheels
   - Differential drive
-    - TBD
+    - rob_dist_between_wh (`double`): distance between left-right wheels (m)
+    - wh_right_diam (`double`): right wheel diameter (m)
+    - wh_right_idx (`size_t`): right wheel index in the
+      [mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg)
+      (0..1)
+    - wh_right_inv (`bool`): invert positive direction of the right
+      wheel angular motion
+    - wh_left_diam (`double`): left wheel diameter (m)
+    - wh_left_idx (`size_t`): left wheel index in the
+      [mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg)
+      (0..1)
+    - wh_left_inv (`bool`): invert positive direction of the left
+      wheel angular motion
   - Tricycle
     - TBD 
   - Three-wheeled omnidirectional robot
-    - TBD
+    - rob_dist_center_wh (`double`): distance between the robot geometric center
+      and the omnidirectional wheels (m)
+    - wh_front_right_diam (`double`): front-right wheel diameter (m)
+    - wh_front_right_idx (`size_t`): front-right wheel index in the
+      [mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg)
+      (0..2)
+    - wh_front_right_inv (`bool`): invert positive direction of the front-right
+      wheel angular motion
+    - wh_front_left_diam (`double`): front-left wheel diameter (m)
+    - wh_front_left_idx (`size_t`): front-left wheel index in the
+      [mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg)
+      (0..2)
+    - wh_front_left_inv (`bool`): invert positive direction of the front-left
+      wheel angular motion
+    - wh_back_diam (`double`): back wheel diameter (m)
+    - wh_back_idx (`size_t`): back wheel index in the
+      [mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg)
+      (0..2)
+    - wh_back_inv (`bool`): invert positive direction of the back
+      wheel angular motion
   - Four-wheeled omnidirectional robot
     - rob_dist_between_front_back_wh (`double`): distance between front-back
       wheels (m)
@@ -124,6 +156,8 @@ catkin build
 ```
 
 ### Launch
+
+**sdpo_ros_odom_wh**
 
 ```sh
 roslaunch sdpo_ros_odom sdpo_ros_odom_wh.launch

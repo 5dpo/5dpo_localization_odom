@@ -38,10 +38,16 @@ class OdomWh {
     return OdomWhType::kUnknown;
   }
 
-  virtual void setMotorDriveEncTicksDelta(const size_t& idx,
-      const int32_t& delta_ticks, const double& ticks_rev) = 0;
-  virtual void setMotorDriveW(const size_t& idx, const double& w_curr) = 0;
-  virtual double getMotorDriveWr(const size_t& idx) = 0;
+  void setMotorDriveEncTicksDelta(const size_t& idx,
+      const int32_t& delta_ticks, const double& ticks_rev) {
+    mot[mot_idx[idx]].setEncTicksDelta(delta_ticks, ticks_rev);
+  }
+  void setMotorDriveW(const size_t& idx, const double& w_curr) {
+    mot[mot_idx[idx]].setW(w_curr);
+  }
+  double getMotorDriveWr(const size_t& idx) {
+    return mot[mot_idx[idx]].w_r;
+  }
   virtual std::string getMotorDriveIdxStr(const size_t& idx) = 0;
 
   virtual void setVelRef(const double& v, const double& vn,
