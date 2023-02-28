@@ -1,5 +1,5 @@
-base_frame_id: "base_footprint"
-odom_frame_id: "odom"
+base_frame_id: $(arg robot_id)/base_footprint
+odom_frame_id: $(arg robot_id)/odom
 
 # Four-Wheeled Omnidirectional
 steering_geometry: "omni4"
