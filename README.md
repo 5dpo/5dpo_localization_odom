@@ -1,6 +1,6 @@
 # 5dpo_ros_odom
 
-**Version 1.0.0**
+**Version 1.1.0**
 
 This repository implements a data processor for the estimation of the robot pose
 based on odometric-only data (e.g., wheeled, laser, visual, and/or inertial
@@ -11,11 +11,11 @@ reckoning pose estimation of the robot.
 **With this version, it is possible to do:**
 
 - Wheeled odometry (four-wheeled omnidirectional steering geometry)
+- Wheeled odometry (differential and three-wheeled omnidirectional steering
+  geometries)
 
 **The next version will add these features:**
 
-- Wheeled odometry (differential and three-wheeled omnidirectional steering
-  geometries)
 - Wheeled odometry (tricycle steering geometry)
 - Limit the maximum angular speed of the wheels and scale the velocities
 - Fusion of wheels and inertial odometry data
