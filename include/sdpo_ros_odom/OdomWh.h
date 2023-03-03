@@ -54,11 +54,13 @@ class OdomWh {
       const double& w) = 0;
 
   void update() {
+    updateOdomVel();
     updateOdomDelta();
     updateOdomPose();
   }
 
  private:
+  virtual void updateOdomVel() = 0;
   virtual void updateOdomDelta() = 0;
   void updateOdomPose() {
     pose.x += odo.x_delta;

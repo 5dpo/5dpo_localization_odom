@@ -56,6 +56,12 @@ void OdomWhDiff::setVelRef(const double &v, const double &vn,
   mot[kWhIdxL].setVr( v - 0.5 * rob_l[kRobLenIdx] * w);
 }
 
+void OdomWhDiff::updateOdomVel() {
+  vel.v = 0.5 * (-mot[kWhIdxR].v + mot[kWhIdxL].v);
+  vel.vn = 0;
+  vel.w = -(mot[kWhIdxR].v + mot[kWhIdxL].v) / rob_l[kRobLenIdx];
+}
+
 void OdomWhDiff::updateOdomDelta() {
   // Robot coordinate frame
   odo.u_delta = 0.5 * (-mot[kWhIdxR].dist_delta + mot[kWhIdxL].dist_delta);

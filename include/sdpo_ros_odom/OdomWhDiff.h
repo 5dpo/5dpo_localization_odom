@@ -27,6 +27,7 @@ class OdomWhDiff : public OdomWh {
 
   void setVelRef(const double& v, const double& vn, const double& w) override;
 
+  void updateOdomVel() override;
   void updateOdomDelta() override;
 };
 

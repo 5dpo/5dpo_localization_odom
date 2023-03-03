@@ -62,6 +62,13 @@ void OdomWhOmni3::setVelRef(const double &v, const double &vn,
   mot[kWhIdxB].setVr(vn - rob_l[kRobLenIdx] * w);
 }
 
+void OdomWhOmni3::updateOdomVel() {
+  vel.v = sqrt(3) * (-mot[kWhIdxFR].v + mot[kWhIdxFL].v) / 3;
+  vel.vn = (-mot[kWhIdxFR].v - mot[kWhIdxFL].v + 2 * mot[kWhIdxB].v) / 3;
+  vel.w = -(mot[kWhIdxFR].v + mot[kWhIdxFL].v + mot[kWhIdxB].v) /
+      (3 * rob_l[kRobLenIdx]);
+}
+
 void OdomWhOmni3::updateOdomDelta() {
   // Robot coordinate frame
   odo.u_delta = sqrt(3) * (
