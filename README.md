@@ -1,6 +1,6 @@
 # 5dpo_ros_odom
 
-**Version 1.1.1**
+**Version 1.1.2**
 
 This repository implements a data processor for the estimation of the robot pose
 based on odometric-only data (e.g., wheeled, laser, visual, and/or inertial
