@@ -113,8 +113,13 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-#   LIBRARIES sdpo_q2_ros_driver
-#   CATKIN_DEPENDS other_catkin_pkg
+  LIBRARIES ${PROJECT_NAME}_wh
+  CATKIN_DEPENDS
+    roscpp
+    geometry_msgs
+    nav_msgs
+    sdpo_ros_interfaces_hw
+    tf
 #   DEPENDS system_lib
 )
 
@@ -130,14 +135,26 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/sdpo_ros_odom.cpp
-# )
+add_library(${PROJECT_NAME}_wh
+  include/${PROJECT_NAME}/OdomWh.h
+  include/${PROJECT_NAME}/OdomWhDiff.h
+  include/${PROJECT_NAME}/OdomWhMotorDrive.h
+  include/${PROJECT_NAME}/OdomWhOmni3.h
+  include/${PROJECT_NAME}/OdomWhOmni4.h
+  include/${PROJECT_NAME}/utils.h
+  src/${PROJECT_NAME}/OdomWhDiff.cpp
+  src/${PROJECT_NAME}/OdomWhMotorDrive.cpp
+  src/${PROJECT_NAME}/OdomWhOmni3.cpp
+  src/${PROJECT_NAME}/OdomWhOmni4.cpp
+  src/${PROJECT_NAME}/utils.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_wh
+  ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
+)
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
@@ -156,7 +173,7 @@ add_executable(${PROJECT_NAME}_wh_node
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_wh_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_wh_node
