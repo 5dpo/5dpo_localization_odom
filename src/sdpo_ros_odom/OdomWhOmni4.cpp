@@ -122,4 +122,23 @@ void OdomWhOmni4::updateOdomDelta() {
   odo.th_delta = odo.w_delta;
 }
 
+void OdomWhOmni4::computeFwdKin(const std::vector<double>& v_mot,
+    double& v, double& vn, double& w) {
+  v  = (v_mot[kWhIdxFL] - v_mot[kWhIdxFR] + v_mot[kWhIdxBL] - v_mot[kWhIdxBR])
+      / 4;
+  vn =(-v_mot[kWhIdxFL] - v_mot[kWhIdxFR] + v_mot[kWhIdxBL] + v_mot[kWhIdxBR])
+      / 4;
+  w  = -(v_mot[kWhIdxFL] + v_mot[kWhIdxFR] + v_mot[kWhIdxBL] + v_mot[kWhIdxBR])
+      / (2 * (rob_l[kRobLenIdxF2B] + rob_l[kRobLenIdxL2R]));
+}
+
+void OdomWhOmni4::computeInvKin(const double& v, const double& vn,
+    const double& w, std::vector<double>& v_mot) {
+  v_mot.resize(4);
+  v_mot[kWhIdxFL] = v - vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R]) * w /2;
+  v_mot[kWhIdxFR] =-v - vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R]) * w /2;
+  v_mot[kWhIdxBL] = v + vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R]) * w /2;
+  v_mot[kWhIdxBR] =-v + vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R]) * w /2;
+}
+
 } // namespace sdpo_ros_odom

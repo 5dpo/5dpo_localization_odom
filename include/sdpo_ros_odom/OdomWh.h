@@ -51,6 +51,9 @@ class OdomWh {
   double getMotorDriveWr(const size_t& idx) {
     return mot[mot_idx[idx]].w_r;
   }
+  inline size_t getMotorDriveIdx(const size_t& idx) {
+    return mot_idx[idx];
+  }
   virtual std::string getMotorDriveIdxStr(const size_t& idx) = 0;
 
   virtual void setVelRef(const double& v, const double& vn,
@@ -62,6 +65,11 @@ class OdomWh {
     updateOdomDelta();
     updateOdomPose();
   }
+
+  virtual void computeFwdKin(const std::vector<double>& v_mot,
+      double& v, double& vn, double& w) = 0;
+  virtual void computeInvKin(const double& v, const double& vn, const double& w,
+      std::vector<double>& v_mot) = 0;
 
  private:
   virtual void updateOdomVel() = 0;

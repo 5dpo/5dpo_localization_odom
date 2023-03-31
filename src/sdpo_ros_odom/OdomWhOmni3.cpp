@@ -106,4 +106,22 @@ void OdomWhOmni3::updateOdomDelta() {
   odo.th_delta = odo.w_delta;
 }
 
+void OdomWhOmni3::computeFwdKin(const std::vector<double>& v_mot,
+    double& v, double& vn, double& w) {
+  v  = sqrt(3) * (-v_mot[kWhIdxFR] + v_mot[kWhIdxFL]) / 3;
+  vn = (-v_mot[kWhIdxFR] - v_mot[kWhIdxFL] + 2 * v_mot[kWhIdxB]) / 3;
+  w  = -(v_mot[kWhIdxFR] + v_mot[kWhIdxFL] + v_mot[kWhIdxB]) /
+      (3 * rob_l[kRobLenIdx]);
+}
+
+void OdomWhOmni3::computeInvKin(const double& v, const double& vn,
+    const double& w, std::vector<double>& v_mot) {
+  v_mot.resize(3);
+  v_mot[kWhIdxFR] = -0.5 * sqrt(3) * v - 0.5 * vn -
+      rob_l[kRobLenIdx] * w;
+  v_mot[kWhIdxFL] = 0.5 * sqrt(3) * v - 0.5 * vn -
+      rob_l[kRobLenIdx] * w;
+  v_mot[kWhIdxB] = vn - rob_l[kRobLenIdx] * w;
+}
+
 } // namespace sdpo_ros_odom

@@ -30,6 +30,11 @@ class OdomWhDiff : public OdomWh {
 
   void updateOdomVel() override;
   void updateOdomDelta() override;
+
+  void computeFwdKin(const std::vector<double>& v_mot,
+      double& v, double& vn, double& w) override;
+  void computeInvKin(const double& v, const double& vn, const double& w,
+      std::vector<double>& v_mot) override;
 };
 
 } // namespace sdpo_ros_odom

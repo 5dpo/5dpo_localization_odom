@@ -81,4 +81,18 @@ void OdomWhDiff::updateOdomDelta() {
   odo.th_delta = odo.w_delta;
 }
 
+void OdomWhDiff::computeFwdKin(const std::vector<double>& v_mot,
+    double& v, double& vn, double& w) {
+  v  = 0.5 * (-v_mot[kWhIdxR] + v_mot[kWhIdxL]);
+  vn = 0;
+  w  = -(v_mot[kWhIdxR] + v_mot[kWhIdxL]) / rob_l[kRobLenIdx];
+}
+
+void OdomWhDiff::computeInvKin(const double& v, const double& vn,
+    const double& w, std::vector<double>& v_mot) {
+  v_mot.resize(2);
+  v_mot[kWhIdxR] = -v - 0.5 * rob_l[kRobLenIdx] * w;
+  v_mot[kWhIdxL] =  v - 0.5 * rob_l[kRobLenIdx] * w;
+}
+
 } // namespace sdpo_ros_odom
