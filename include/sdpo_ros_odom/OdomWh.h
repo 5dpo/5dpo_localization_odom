@@ -55,6 +55,7 @@ class OdomWh {
 
   virtual void setVelRef(const double& v, const double& vn,
       const double& w) = 0;
+  virtual void getVelRef(double& v, double& vn, double& w) = 0;
 
   void update() {
     updateOdomVel();

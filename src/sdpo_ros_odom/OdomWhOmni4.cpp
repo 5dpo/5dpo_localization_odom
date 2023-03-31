@@ -69,6 +69,15 @@ void OdomWhOmni4::setVelRef(const double &v, const double &vn,
       -v + vn - (rob_l[kRobLenIdxF2B]+rob_l[kRobLenIdxL2R]) * w /2);
 }
 
+void OdomWhOmni4::getVelRef(double& v, double& vn, double& w) {
+  v  = (mot[kWhIdxFL].v_r - mot[kWhIdxFR].v_r + mot[kWhIdxBL].v_r -
+      mot[kWhIdxBR].v_r) / 4;
+  vn = (-mot[kWhIdxFL].v_r - mot[kWhIdxFR].v_r + mot[kWhIdxBL].v_r +
+      mot[kWhIdxBR].v_r) / 4;
+  w  = -(mot[kWhIdxFL].v_r + mot[kWhIdxFR].v_r + mot[kWhIdxBL].v_r +
+      mot[kWhIdxBR].v_r) / (2 * (rob_l[kRobLenIdxF2B] + rob_l[kRobLenIdxL2R]));
+}
+
 void OdomWhOmni4::updateOdomVel() {
   vel.v =
       (mot[kWhIdxFL].v - mot[kWhIdxFR].v + mot[kWhIdxBL].v - mot[kWhIdxBR].v)

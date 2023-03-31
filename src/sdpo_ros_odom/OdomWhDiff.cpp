@@ -56,6 +56,12 @@ void OdomWhDiff::setVelRef(const double &v, const double &vn,
   mot[kWhIdxL].setVr( v - 0.5 * rob_l[kRobLenIdx] * w);
 }
 
+void OdomWhDiff::getVelRef(double& v, double& vn, double& w) {
+  v  = 0.5 * (-mot[kWhIdxR].v_r + mot[kWhIdxL].v_r);
+  vn = 0;
+  w  = -(mot[kWhIdxR].v_r + mot[kWhIdxL].v_r) / rob_l[kRobLenIdx];
+}
+
 void OdomWhDiff::updateOdomVel() {
   vel.v = 0.5 * (-mot[kWhIdxR].v + mot[kWhIdxL].v);
   vel.vn = 0;
