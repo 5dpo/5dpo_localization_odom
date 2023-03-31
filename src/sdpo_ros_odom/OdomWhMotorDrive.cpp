@@ -20,6 +20,11 @@ void OdomWhMotorDrive::setW(const double& w_curr) {
   v = inverted? -ang2lin(w) : ang2lin(w);
 }
 
+void OdomWhMotorDrive::setWr(const double& w_ref) {
+  w_r = w_ref;
+  v_r = inverted? -ang2lin(w_r) : ang2lin(w_r);
+}
+
 void OdomWhMotorDrive::setVr(const double& v_ref) {
   v_r = v_ref;
   w_r = inverted? -lin2ang(v_r) : lin2ang(v_r);

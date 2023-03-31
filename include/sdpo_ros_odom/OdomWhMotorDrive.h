@@ -31,6 +31,7 @@ struct OdomWhMotorDrive {
 
   void setEncTicksDelta(const int32_t& delta_ticks, const double& ticks_rev);
   void setW(const double& w_curr);
+  void setWr(const double& w_ref);
 
   void setVr(const double& v_ref);
 };
