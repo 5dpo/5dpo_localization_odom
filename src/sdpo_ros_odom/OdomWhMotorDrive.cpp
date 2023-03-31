@@ -15,6 +15,17 @@ void OdomWhMotorDrive::setEncTicksDelta(const int32_t& delta_ticks,
   dist_delta = ang2lin(ang_delta);
 }
 
+void OdomWhMotorDrive::setDistDelta(const double& delta_dist,
+                                    const double& ticks_rev) {
+  dist_delta = delta_dist;
+  ticks_per_rev = ticks_rev;
+
+  ang_delta = lin2ang(dist_delta);
+
+  enc_ticks_delta = inverted? -ang_delta * ticks_per_rev / (2 * M_PI) :
+                              ang_delta * ticks_per_rev / (2 * M_PI);
+}
+
 void OdomWhMotorDrive::setW(const double& w_curr) {
   w = w_curr;
   v = inverted? -ang2lin(w) : ang2lin(w);
