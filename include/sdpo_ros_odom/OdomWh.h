@@ -45,6 +45,9 @@ class OdomWh {
   void setMotorDriveW(const size_t& idx, const double& w_curr) {
     mot[mot_idx[idx]].setW(w_curr);
   }
+  void setMotorDriveWr(const size_t& idx, const double& w_ref) {
+    mot[mot_idx[idx]].setWr(w_ref);
+  }
   double getMotorDriveWr(const size_t& idx) {
     return mot[mot_idx[idx]].w_r;
   }
