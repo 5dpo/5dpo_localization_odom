@@ -50,22 +50,26 @@ std::string OdomWhDiff::getMotorDriveIdxStr(const size_t& idx) {
   }
 }
 
-void OdomWhDiff::setVelRef(const double &v, const double &vn,
-    const double &w) {
-  mot[kWhIdxR].setVr(-v - 0.5 * rob_l[kRobLenIdx] * w);
-  mot[kWhIdxL].setVr( v - 0.5 * rob_l[kRobLenIdx] * w);
-}
-
-void OdomWhDiff::getVelRef(double& v, double& vn, double& w) {
-  v  = 0.5 * (-mot[kWhIdxR].v_r + mot[kWhIdxL].v_r);
-  vn = 0;
-  w  = -(mot[kWhIdxR].v_r + mot[kWhIdxL].v_r) / rob_l[kRobLenIdx];
-}
-
-void OdomWhDiff::updateOdomVel() {
-  vel.v = 0.5 * (-mot[kWhIdxR].v + mot[kWhIdxL].v);
+void OdomWhDiff::updateVel() {
+  vel.v  = 0.5 * (-mot[kWhIdxR].v + mot[kWhIdxL].v);
   vel.vn = 0;
-  vel.w = -(mot[kWhIdxR].v + mot[kWhIdxL].v) / rob_l[kRobLenIdx];
+  vel.w  = -(mot[kWhIdxR].v + mot[kWhIdxL].v) / rob_l[kRobLenIdx];
+}
+
+void OdomWhDiff::updateVelRef() {
+  vel.v_r  = 0.5 * (-mot[kWhIdxR].v_r + mot[kWhIdxL].v_r);
+  vel.vn_r = 0;
+  vel.w_r  = -(mot[kWhIdxR].v_r + mot[kWhIdxL].v_r) / rob_l[kRobLenIdx];
+}
+
+void OdomWhDiff::updateVelInv() {
+  mot[kWhIdxR].setV(-vel.v - 0.5 * rob_l[kRobLenIdx] * vel.w);
+  mot[kWhIdxL].setV( vel.v - 0.5 * rob_l[kRobLenIdx] * vel.w);
+}
+
+void OdomWhDiff::updateVelRefInv() {
+  mot[kWhIdxR].setVr(-vel.v_r - 0.5 * rob_l[kRobLenIdx] * vel.w_r);
+  mot[kWhIdxL].setVr( vel.v_r - 0.5 * rob_l[kRobLenIdx] * vel.w_r);
 }
 
 void OdomWhDiff::updateOdomDelta() {
@@ -76,9 +80,23 @@ void OdomWhDiff::updateOdomDelta() {
       rob_l[kRobLenIdx];
 
   // Odom global frame
-  odo.x_delta = odo.u_delta * cos(pose.th+odo.w_delta/2);
-  odo.y_delta = odo.u_delta * sin(pose.th+odo.w_delta/2);
+  odo.x_delta = odo.u_delta * cos(pose.th+odo.w_delta/2.0);
+  odo.y_delta = odo.u_delta * sin(pose.th+odo.w_delta/2.0);
   odo.th_delta = odo.w_delta;
+}
+
+void OdomWhDiff::updateOdomDeltaInv() {
+  // Odom local frame
+  odo.w_delta = odo.th_delta;
+  odo.u_delta = odo.x_delta * cos(pose.th+odo.w_delta/2.0) +
+                odo.y_delta * sin(pose.th+odo.w_delta/2.0);
+  odo.v_delta = 0.0;
+
+  // Motor distance delta
+  mot[kWhIdxR].setDistDelta(
+      -odo.u_delta - 0.5 * rob_l[kRobLenIdx] * odo.w_delta);
+  mot[kWhIdxL].setDistDelta(
+       odo.u_delta - 0.5 * rob_l[kRobLenIdx] * odo.w_delta);
 }
 
 void OdomWhDiff::computeFwdKin(const std::vector<double>& v_mot,

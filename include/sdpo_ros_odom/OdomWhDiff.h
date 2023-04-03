@@ -25,16 +25,19 @@ class OdomWhDiff : public OdomWh {
 
   std::string getMotorDriveIdxStr(const size_t& idx) override;
 
-  void setVelRef(const double& v, const double& vn, const double& w) override;
-  void getVelRef(double& v, double& vn, double& w) override;
-
-  void updateOdomVel() override;
-  void updateOdomDelta() override;
-
   void computeFwdKin(const std::vector<double>& v_mot,
       double& v, double& vn, double& w) override;
   void computeInvKin(const double& v, const double& vn, const double& w,
       std::vector<double>& v_mot) override;
+
+ protected:
+  void updateVel() override;
+  void updateVelRef() override;
+  void updateVelInv() override;
+  void updateVelRefInv() override;
+
+  void updateOdomDelta() override;
+  void updateOdomDeltaInv() override;
 };
 
 } // namespace sdpo_ros_odom
