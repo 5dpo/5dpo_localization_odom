@@ -43,11 +43,11 @@ inline float normAngRad(float angle) {
 
 inline double normAngRad(double angle) {
   // Source: https://stackoverflow.com/a/11498248
-  angle = fmod(angle + M_PI, M_PI * 2.0);
+  angle = fmod(angle + M_PIf64, M_PIf64 * 2.0);
   if (angle < 0) {
-    angle += M_PI * 2.0;
+    angle += M_PIf64 * 2.0;
   }
-  return angle - M_PI;
+  return angle - M_PIf64;
 }
 
 struct OdomPose2D {

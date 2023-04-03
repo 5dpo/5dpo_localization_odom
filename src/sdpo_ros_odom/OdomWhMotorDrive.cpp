@@ -4,26 +4,34 @@
 
 namespace sdpo_ros_odom {
 
-void OdomWhMotorDrive::setEncTicksDelta(const int32_t& delta_ticks,
-                                        const double& ticks_rev) {
+void OdomWhMotorDrive::setEncTicksDelta(const int32_t& delta_ticks) {
   enc_ticks_delta = delta_ticks;
-  ticks_per_rev = ticks_rev;
 
-  ang_delta = inverted? -enc_ticks_delta * 2 * M_PI / ticks_per_rev :
-                        enc_ticks_delta * 2 * M_PI / ticks_per_rev;
+  ang_delta = inverted? -enc_ticks_delta * 2 * M_PIf64 / ticks_per_rev :
+                        enc_ticks_delta * 2 * M_PIf64 / ticks_per_rev;
 
   dist_delta = ang2lin(ang_delta);
 }
 
-void OdomWhMotorDrive::setDistDelta(const double& delta_dist,
-                                    const double& ticks_rev) {
-  dist_delta = delta_dist;
+void OdomWhMotorDrive::setEncTicksDelta(const int32_t& delta_ticks,
+                                        const double& ticks_rev) {
   ticks_per_rev = ticks_rev;
+  setEncTicksDelta(delta_ticks);
+}
+
+void OdomWhMotorDrive::setDistDelta(const double& delta_dist) {
+  dist_delta = delta_dist;
 
   ang_delta = lin2ang(dist_delta);
 
-  enc_ticks_delta = inverted? -ang_delta * ticks_per_rev / (2 * M_PI) :
-                              ang_delta * ticks_per_rev / (2 * M_PI);
+  enc_ticks_delta = inverted? -ang_delta * ticks_per_rev / (2 * M_PIf64) :
+                              ang_delta * ticks_per_rev / (2 * M_PIf64);
+}
+
+void OdomWhMotorDrive::setDistDelta(const double& delta_dist,
+                                    const double& ticks_rev) {
+  ticks_per_rev = ticks_rev;
+  setDistDelta(delta_dist);
 }
 
 void OdomWhMotorDrive::setW(const double& w_curr) {
@@ -34,6 +42,11 @@ void OdomWhMotorDrive::setW(const double& w_curr) {
 void OdomWhMotorDrive::setWr(const double& w_ref) {
   w_r = w_ref;
   v_r = inverted? -ang2lin(w_r) : ang2lin(w_r);
+}
+
+void OdomWhMotorDrive::setV(const double& v_curr) {
+  v = v_curr;
+  w = inverted? -lin2ang(v) : lin2ang(v);
 }
 
 void OdomWhMotorDrive::setVr(const double& v_ref) {
