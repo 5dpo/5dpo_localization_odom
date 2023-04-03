@@ -25,6 +25,8 @@ class OdomWhDiff : public OdomWh {
 
   std::string getMotorDriveIdxStr(const size_t& idx) override;
 
+  void updateVelRef() override;
+
   void computeFwdKin(const std::vector<double>& v_mot,
       double& v, double& vn, double& w) override;
   void computeInvKin(const double& v, const double& vn, const double& w,
@@ -32,7 +34,6 @@ class OdomWhDiff : public OdomWh {
 
  protected:
   void updateVel() override;
-  void updateVelRef() override;
   void updateVelInv() override;
   void updateVelRefInv() override;
 
