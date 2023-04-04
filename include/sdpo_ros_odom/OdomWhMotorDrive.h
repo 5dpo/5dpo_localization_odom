@@ -29,9 +29,13 @@ struct OdomWhMotorDrive {
     return angular * wh_d / 2.0;
   }
 
+  void setEncTicksDelta(const int32_t& delta_ticks);
   void setEncTicksDelta(const int32_t& delta_ticks, const double& ticks_rev);
+  void setDistDelta(const double& delta_dist);
+  void setDistDelta(const double& delta_dist, const double& ticks_rev);
   void setW(const double& w_curr);
-
+  void setWr(const double& w_ref);
+  void setV(const double& v_curr);
   void setVr(const double& v_ref);
 };
 

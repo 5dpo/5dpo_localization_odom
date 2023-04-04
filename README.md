@@ -1,6 +1,4 @@
-# 5dpo_ros_odom
-
-**Version 1.1.2**
+# [5dpo_ros_odom](https://github.com/5dpo/5dpo_ros_odom)
 
 This repository implements a data processor for the estimation of the robot pose
 based on odometric-only data (e.g., wheeled, laser, visual, and/or inertial
@@ -8,11 +6,14 @@ odometry). The ROS package implemented in this repository makes available nodes
 that may leverage one and/or multiple sources of odometry data for dead
 reckoning pose estimation of the robot.
 
+**Version 1.2.0**
+
 **With this version, it is possible to do:**
 
 - Wheeled odometry (four-wheeled omnidirectional steering geometry)
 - Wheeled odometry (differential and three-wheeled omnidirectional steering
   geometries)
+- Inverse wheeled odometry
 
 **The next version will add these features:**
 
@@ -129,6 +130,8 @@ reckoning pose estimation of the robot.
   ([mot_ref.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_ref.msg))
 - odom
   ([Odometry.msg](https://docs.ros.org/en/noetic/api/nav_msgs/html/msg/Odometry.html))
+- tf (N/A)
+  - base_frame_id > odom_frame_id
 
 ### Services
 
@@ -153,6 +156,8 @@ git clone git@github.com:5dpo/5dpo_ros_odom.git
 # Build
 cd ..
 catkin build
+# OR catkin_make_isolated (more slow, build and check dependencies individually)
+# OR catkin build (requires catkin tools)
 ```
 
 ### Launch
@@ -168,14 +173,12 @@ roslaunch sdpo_ros_odom sdpo_ros_odom_wh.launch
 If you have any questions or you want to know more about this work, please
 contact one of the contributors of this package:
 
-- Héber Miguel Sobreira ([gitlab](https://gitlab.inesctec.pt/heber.m.sobreira),
-  [inesctec](mailto:heber.m.sobreira@inesctec.pt))
-- João G. Martins ([github](https://github.com/Joao-G-Martins),
-  [feup](mailto:up201806222@edu.fe.up.pt),
-  [inesctec](mailto:joao.g.martins@inesctec.pt))
+- Héber Miguel Sobreira ([github](https://github.com/HeberSobreira),
+  [gitlab](https://gitlab.inesctec.pt/heber.m.sobreira),
+  [mail](mailto:heber.m.sobreira@inesctec.pt))
 - Ricardo B. Sousa ([github](https://github.com/sousarbarb/),
-  [gitlab](https://gitlab.com/sousarbarb/),
-  [personal](mailto:sousa.ricardob@outlook.com),
-  [feup:professor](mailto:rbs@fe.up.pt),
-  [feup:student](mailto:up201503004@edu.fe.up.pt),
-  [inesctec](mailto:ricardo.b.sousa@inesctec.pt))
+  [gitlab](https://gitlab.inesctec.pt/ricardo.b.sousa),
+  [mail:inesctec](mailto:ricardo.b.sousa@inesctec.pt),
+  [mail:personal](mailto:sousa.ricardob@outlook.com),
+  [mail:professor](mailto:rbs@fe.up.pt),
+  [mail:student](mailto:up201503004@edu.fe.up.pt))
