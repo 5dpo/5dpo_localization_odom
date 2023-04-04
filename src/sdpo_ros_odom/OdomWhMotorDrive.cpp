@@ -24,8 +24,9 @@ void OdomWhMotorDrive::setDistDelta(const double& delta_dist) {
 
   ang_delta = lin2ang(dist_delta);
 
-  enc_ticks_delta = inverted? -ang_delta * ticks_per_rev / (2 * M_PIf64) :
-                              ang_delta * ticks_per_rev / (2 * M_PIf64);
+  enc_ticks_delta = inverted?
+      -std::round(ang_delta * ticks_per_rev / (2 * M_PIf64)) :
+      std::round(ang_delta * ticks_per_rev / (2 * M_PIf64));
 }
 
 void OdomWhMotorDrive::setDistDelta(const double& delta_dist,
