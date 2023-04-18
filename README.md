@@ -6,7 +6,7 @@ odometry). The ROS package implemented in this repository makes available nodes
 that may leverage one and/or multiple sources of odometry data for dead
 reckoning pose estimation of the robot.
 
-**Version 1.2.0**
+**Version 1.3.0**
 
 **With this version, it is possible to do:**
 
@@ -14,6 +14,7 @@ reckoning pose estimation of the robot.
 - Wheeled odometry (differential and three-wheeled omnidirectional steering
   geometries)
 - Inverse wheeled odometry
+- Enable/disable publication of the tf base_frame_id > odom_frame_id
 
 **The next version will add these features:**
 
@@ -42,6 +43,8 @@ reckoning pose estimation of the robot.
   base footprint coordinate frame
 - odom_frame_id (`std::string = "odom"`): tf frame id of the robot odometry
   coordinate frame
+- publish_tf (`bool = true`): enable the publication of the tf
+  base_frame_id > odom_frame_id
 - steering_geometry: steering geometry of the mobile robot
   (`"diff" | "tricyc" | "omni3" | "omni4"`)
   - w_ref_max_enabled (`bool = false`): enable a maximum angular speed for the
