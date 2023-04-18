@@ -57,6 +57,11 @@ bool OdomWhROS::readParam() {
                                 "odom");
   ROS_INFO("[sdpo_ros_odom] Odom frame ID: %s", odom_frame_id_.c_str());
 
+  print_is_default_param_set("publish_tf");
+  nh_private.param<bool>("publish_tf", publish_tf_, true);
+  ROS_INFO("[sdpo_ros_odom] Publish TF: %s",
+           publish_tf_? "yes" : "no");
+
   nh_private.getParam("steering_geometry", steering_geometry_);
   ROS_INFO("[sdpo_ros_odom] Steering geometry: %s", steering_geometry_.c_str());
 
@@ -323,7 +328,9 @@ void OdomWhROS::subMotEnc(const sdpo_ros_interfaces_hw::mot_enc_array& msg) {
     odom2base_tf.stamp_ = msg.stamp;
     odom2base_tf.frame_id_ = odom_frame_id_;
     odom2base_tf.child_frame_id_ = base_frame_id_;
-    tf_broad_.sendTransform(odom2base_tf);
+    if (publish_tf_) {
+      tf_broad_.sendTransform(odom2base_tf);
+    }
 
     nav_msgs::Odometry odom_msg;
     odom_msg.header.stamp = odom2base_tf.stamp_;

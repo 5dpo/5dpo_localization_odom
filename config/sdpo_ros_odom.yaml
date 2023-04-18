@@ -1,6 +1,8 @@
 base_frame_id: $(arg robot_id)/base_footprint
 odom_frame_id: $(arg robot_id)/odom
 
+publish_tf: true
+
 # Four-Wheeled Omnidirectional
 steering_geometry: "omni4"
 rob_dist_between_front_back_wh: 0.265
