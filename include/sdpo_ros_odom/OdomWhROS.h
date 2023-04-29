@@ -32,6 +32,8 @@ class OdomWhROS {
   std::string odom_frame_id_;
   bool publish_tf_;
   std::string steering_geometry_;
+  bool w_ref_max_enabled_;
+  double w_ref_max_;
 
  public:
   OdomWhROS();

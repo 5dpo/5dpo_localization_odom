@@ -65,6 +65,24 @@ bool OdomWhROS::readParam() {
   nh_private.getParam("steering_geometry", steering_geometry_);
   ROS_INFO("[sdpo_ros_odom] Steering geometry: %s", steering_geometry_.c_str());
 
+  print_is_default_param_set("w_ref_max_enabled");
+  nh_private.param<bool>("w_ref_max_enabled", w_ref_max_enabled_, false);
+  ROS_INFO("[sdpo_ros_odom] Maximum angular speed enabled: %s",
+           w_ref_max_enabled_? "yes" : "no");
+
+  if (w_ref_max_enabled_) {
+    if (!nh_private.hasParam("w_ref_max")) {
+      throw std::runtime_error(
+          "[OdomWhROS.cpp] OdomWhROS::readParam: "
+          "if the maximum angular speed is enabled, the parameter w_ref_max "
+          "must be set");
+    }
+
+    nh_private.getParam("w_ref_max", w_ref_max_);
+    ROS_INFO("[sdpo_ros_odom] Maximum wheel angular speed: %lf (rad/s)",
+             w_ref_max_);
+  }
+
   // Four-Wheeled Omnidirectional Robot
   if (steering_geometry_ == kOdomWhOmni4Str) {
     if (!nh_private.hasParam("rob_dist_between_front_back_wh") ||

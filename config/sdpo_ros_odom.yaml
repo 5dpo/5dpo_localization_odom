@@ -5,6 +5,8 @@ publish_tf: true
 
 # Four-Wheeled Omnidirectional
 steering_geometry: "omni4"
+w_ref_max_enabled: true
+w_ref_max: 10.0
 rob_dist_between_front_back_wh: 0.265
 rob_dist_between_left_right_wh: 0.270
 wh_front_left_diam: 0.102
