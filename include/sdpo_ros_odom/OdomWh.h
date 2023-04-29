@@ -101,6 +101,10 @@ class OdomWh {
     vel.w_r = w_ref;
 
     updateVelRefInv();
+
+    if (w_r_max_enabled) {
+      scaleMotorsDriveWr();
+    }
   }
   virtual void updateVelRef() = 0;
 
@@ -145,6 +149,28 @@ class OdomWh {
 
   virtual void updateOdomDelta() = 0;
   virtual void updateOdomDeltaInv() = 0;
+
+  inline void scaleMotorsDriveWr() {
+    double curr_w_r_max = 0;
+    
+    // Get absolute maximum wheel angular velocity
+    for (auto& m : mot) {
+      if (std::abs(m.w_r) > curr_w_r_max) {
+        curr_w_r_max = std::abs(m.w_r);
+      }
+    }
+
+    // Estimate scale if needed + estimate new angular velocities and robot ref
+    if ((curr_w_r_max > w_r_max) && (w_r_max != 0)) {
+      double scale = w_r_max / curr_w_r_max;
+
+      for (auto& m : mot) {
+        m.setWr(m.w_r * scale);
+      }
+      
+      updateVelRef();
+    }
+  }
 };
 
 } // namespace sdpo_ros_odom
