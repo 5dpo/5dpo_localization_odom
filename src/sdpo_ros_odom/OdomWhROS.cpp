@@ -321,6 +321,11 @@ bool OdomWhROS::readParam() {
         "invalid steering_geometry (check documentation for supported ones)");
   }
 
+  // Initialize wheel angular speed maximum limit
+  if (w_ref_max_enabled_) {
+    odom_->setMotorWRefMax(w_ref_max_enabled_, w_ref_max_);
+  }
+
   return true;
 };
 
@@ -385,7 +390,7 @@ void OdomWhROS::subCmdVel(const geometry_msgs::Twist& msg) {
 
   pub_mot_ref_.publish(mot_ref_msg);
   
-  if (w_ref_max_enabled_) {
+  if (odom_->w_r_max_enabled) {
     pubCmdVelRef();
   }
 }
