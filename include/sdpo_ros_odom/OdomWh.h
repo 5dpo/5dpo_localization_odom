@@ -38,6 +38,13 @@ class OdomWh {
     return OdomWhType::kUnknown;
   }
 
+  inline void setMotorWRefMax(const bool& enable, const double& w_ref_max) {
+    w_r_max_enabled = enable;
+    if (w_r_max_enabled) {
+      w_r_max = w_ref_max;
+    }
+  }
+
   inline void setMotorDriveTicksRev(const double& ticks_rev) {
     for (auto& motor : mot) {
       motor.ticks_per_rev = ticks_rev;

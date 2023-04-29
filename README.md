@@ -129,6 +129,8 @@ reckoning pose estimation of the robot.
 
 ### Publishes
 
+- cmd_vel_ref
+  ([Twist.msg](https://docs.ros.org/en/noetic/api/geometry_msgs/html/msg/Twist.html))
 - motors_ref
   ([mot_ref.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_ref.msg))
 - odom
