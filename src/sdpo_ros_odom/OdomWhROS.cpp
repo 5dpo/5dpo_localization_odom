@@ -20,6 +20,9 @@ OdomWhROS::OdomWhROS() {
     ros::shutdown();
   }
 
+  if (w_ref_max_enabled_) {
+    pub_cmd_vel_ref_ = nh.advertise<geometry_msgs::Twist>("cmd_vel_ref", 1);
+  }
   pub_mot_ref_ = nh.advertise<sdpo_ros_interfaces_hw::mot_ref>("motors_ref", 1);
   pub_odom_ = nh.advertise<nav_msgs::Odometry>("odom", 1);
   sub_mot_enc_ = nh.subscribe("motors_encoders", 1,
@@ -381,6 +384,24 @@ void OdomWhROS::subCmdVel(const geometry_msgs::Twist& msg) {
   }
 
   pub_mot_ref_.publish(mot_ref_msg);
+  
+  if (w_ref_max_enabled_) {
+    pubCmdVelRef();
+  }
+}
+
+void OdomWhROS::pubCmdVelRef() {
+  geometry_msgs::Twist cmd_vel_ref;
+
+  cmd_vel_ref.linear.x = odom_->vel.v_r;
+  cmd_vel_ref.linear.y = odom_->vel.vn_r;
+  cmd_vel_ref.linear.z = 0;
+
+  cmd_vel_ref.angular.x = 0;
+  cmd_vel_ref.angular.y = 0;
+  cmd_vel_ref.angular.z = odom_->vel.w_r;
+
+  pub_cmd_vel_ref_.publish(cmd_vel_ref);
 }
 
 } // namespace sdpo_ros_odom

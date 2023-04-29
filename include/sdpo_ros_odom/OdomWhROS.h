@@ -20,6 +20,7 @@ class OdomWhROS {
  private:
   ros::NodeHandle nh;
 
+  ros::Publisher pub_cmd_vel_ref_;
   ros::Publisher pub_mot_ref_;
   ros::Publisher pub_odom_;
   ros::Subscriber sub_mot_enc_;
@@ -44,6 +45,8 @@ class OdomWhROS {
 
   void subMotEnc(const sdpo_ros_interfaces_hw::mot_enc_array& msg);
   void subCmdVel(const geometry_msgs::Twist& msg);
+
+  void pubCmdVelRef();
 };
 
 } // namespace sdpo_ros_odom
