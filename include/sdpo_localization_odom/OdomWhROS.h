@@ -46,11 +46,14 @@ class OdomWhROS : public rclcpp::Node
 
   std::unique_ptr<OdomWh> odom_;
 
+
+
   std::string base_frame_id_;
 
   std::string odom_frame_id_;
 
   bool publish_tf_;
+  bool invert_tf_;
 
   std::string steering_geometry_;
 
