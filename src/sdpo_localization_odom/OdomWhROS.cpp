@@ -9,9 +9,15 @@
 
 namespace sdpo_localization_odom {
 
+
+
 static const std::string kOdomWhTypeOmni4Str = "omni4";
 
-OdomWhROS::OdomWhROS() {
+
+
+OdomWhROS::OdomWhROS() : rclcpp::Node("sdpo_localization_odom_wh")
+{
+/*
   try {
     readParam();
   } catch (std::exception& e) {
@@ -19,19 +25,36 @@ OdomWhROS::OdomWhROS() {
               e.what());
     ros::shutdown();
   }
+*/
 
-  if (w_ref_max_enabled_) {
-    pub_cmd_vel_ref_ = nh.advertise<geometry_msgs::Twist>("cmd_vel_ref", 1);
-  }
-  pub_mot_ref_ = nh.advertise<sdpo_ros_interfaces_hw::mot_ref>("motors_ref", 1);
-  pub_odom_ = nh.advertise<nav_msgs::Odometry>("odom", 1);
-  sub_mot_enc_ = nh.subscribe("motors_encoders", 1,
-                              &OdomWhROS::subMotEnc, this);
-  sub_cmd_vel_ = nh.subscribe("cmd_vel", 1,
-                              &OdomWhROS::subCmdVel, this);
+
+
+  pub_cmd_vel_ref_ = this->create_publisher<geometry_msgs::msg::Twist>(
+      "cmd_vel_ref", 10);
+
+  pub_mot_ref_ = this->create_publisher
+      <sdpo_drivers_interfaces::msg::MotRefArray>("motors_ref", 10);
+
+  pub_odom_ = this->create_publisher<nav_msgs::msg::Odometry>("odom", 10);
+
+
+
+  sub_mot_enc_ = this->create_subscription
+      <sdpo_drivers_interfaces::msg::MotEncArray>(
+          "motors_enc", 10,
+          std::bind(&OdomWhROS::subMotEnc, this, std::placeholders::_1));
+
+  sub_cmd_vel_ = this->create_subscription<geometry_msgs::msg::Twist>(
+      "cmd_vel", 10,
+      std::bind(&OdomWhROS::subCmdVel, this, std::placeholders::_1));
 }
 
+
+
 bool OdomWhROS::readParam() {
+
+
+/*
   ros::NodeHandle nh_private("~");
 
   if (!nh_private.hasParam("steering_geometry")) {
@@ -327,9 +350,18 @@ bool OdomWhROS::readParam() {
   }
 
   return true;
+
+
+*/
 };
 
-void OdomWhROS::subMotEnc(const sdpo_ros_interfaces_hw::mot_enc_array& msg) {
+
+
+void OdomWhROS::subMotEnc(
+    const sdpo_drivers_interfaces::msg::MotEncArray::SharedPtr msg)
+{
+
+/*
   try {
     for(int i = 0; i < msg.mot_enc_array_data.size(); i++) {
       odom_->setMotorDriveEncTicksDelta(
@@ -377,9 +409,14 @@ void OdomWhROS::subMotEnc(const sdpo_ros_interfaces_hw::mot_enc_array& msg) {
     ROS_ERROR("[sdpo_localization_odom] Error when processing the motor encoders data "
               "message (%s)", e.what());
   }
+*/
 }
 
-void OdomWhROS::subCmdVel(const geometry_msgs::Twist& msg) {
+
+
+void OdomWhROS::subCmdVel(const geometry_msgs::msg::Twist::SharedPtr msg)
+{
+/*
   odom_->setVelRef(msg.linear.x, msg.linear.y, msg.angular.z);
 
   sdpo_ros_interfaces_hw::mot_ref mot_ref_msg;
@@ -393,9 +430,14 @@ void OdomWhROS::subCmdVel(const geometry_msgs::Twist& msg) {
   if (odom_->w_r_max_enabled) {
     pubCmdVelRef();
   }
+*/
 }
 
+
+
 void OdomWhROS::pubCmdVelRef() {
+
+/*
   geometry_msgs::Twist cmd_vel_ref;
 
   cmd_vel_ref.linear.x = odom_->vel.v_r;
@@ -407,6 +449,7 @@ void OdomWhROS::pubCmdVelRef() {
   cmd_vel_ref.angular.z = odom_->vel.w_r;
 
   pub_cmd_vel_ref_.publish(cmd_vel_ref);
+*/
 }
 
 } // namespace sdpo_localization_odom

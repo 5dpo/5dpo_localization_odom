@@ -22,9 +22,11 @@ endif()
 # Dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(sdpo_drivers_interfaces REQUIRED)
 find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 
 
@@ -46,9 +48,11 @@ target_include_directories(${PROJECT_NAME}_wh PUBLIC
 
 ament_target_dependencies(${PROJECT_NAME}_wh
   rclcpp
+  geometry_msgs
   nav_msgs
   sdpo_drivers_interfaces
   tf2
+  tf2_ros
 )
 
 

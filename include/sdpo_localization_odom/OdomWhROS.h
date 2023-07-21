@@ -2,49 +2,82 @@
 
 #include <memory>
 
-#include <ros/ros.h>
-#include <geometry_msgs/Twist.h>
-#include <nav_msgs/Odometry.h>
-#include <sdpo_ros_interfaces_hw/mot_enc_array.h>
-#include <sdpo_ros_interfaces_hw/mot_ref.h>
-#include <tf/transform_broadcaster.h>
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/twist.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <sdpo_drivers_interfaces/msg/mot_enc_array.hpp>
+#include <sdpo_drivers_interfaces/msg/mot_ref_array.hpp>
+#include <tf2_ros/transform_broadcaster.h>
 
 #include "sdpo_localization_odom/OdomWh.h"
 
 namespace sdpo_localization_odom {
 
-class OdomWhROS {
+class OdomWhROS : public rclcpp::Node
+{
+
  public:
+
   static const std::string kOdomWhTypeOmni4Str;
 
+
+
  private:
-  ros::NodeHandle nh;
 
-  ros::Publisher pub_cmd_vel_ref_;
-  ros::Publisher pub_mot_ref_;
-  ros::Publisher pub_odom_;
-  ros::Subscriber sub_mot_enc_;
-  ros::Subscriber sub_cmd_vel_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr pub_cmd_vel_ref_;
 
-  tf::TransformBroadcaster tf_broad_;
+  rclcpp::Publisher<sdpo_drivers_interfaces::msg::MotRefArray>::SharedPtr
+      pub_mot_ref_;
+
+  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr pub_odom_;
+
+
+
+  rclcpp::Subscription<sdpo_drivers_interfaces::msg::MotEncArray>::SharedPtr
+      sub_mot_enc_;
+
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_cmd_vel_;
+
+
+
+  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broad_;
+
+
 
   std::unique_ptr<OdomWh> odom_;
+
   std::string base_frame_id_;
+
   std::string odom_frame_id_;
+
   bool publish_tf_;
+
   std::string steering_geometry_;
+
   bool w_ref_max_enabled_;
+
   double w_ref_max_;
 
+
+
+
+
  public:
+
   OdomWhROS();
+
   ~OdomWhROS() = default;
 
+
+
  private:
+
   bool readParam();
 
-  void subMotEnc(const sdpo_ros_interfaces_hw::mot_enc_array& msg);
-  void subCmdVel(const geometry_msgs::Twist& msg);
+  void subMotEnc(
+      const sdpo_drivers_interfaces::msg::MotEncArray::SharedPtr msg);
+  void subCmdVel(
+      const geometry_msgs::msg::Twist::SharedPtr msg);
 
   void pubCmdVelRef();
 };
