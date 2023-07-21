@@ -1,9 +1,9 @@
-#include "sdpo_ros_odom/OdomWhDiff.h"
+#include "sdpo_localization_odom/OdomWhDiff.h"
 
 #include <exception>
 #include <cmath>
 
-namespace sdpo_ros_odom {
+namespace sdpo_localization_odom {
 
 OdomWhDiff::OdomWhDiff(const std::vector<size_t>& wh_idx,
     const std::vector<double>& wh_d, const std::vector<bool>& wh_inv,
@@ -113,4 +113,4 @@ void OdomWhDiff::computeInvKin(const double& v, const double& vn,
   v_mot[kWhIdxL] =  v - 0.5 * rob_l[kRobLenIdx] * w;
 }
 
-} // namespace sdpo_ros_odom
+} // namespace sdpo_localization_odom

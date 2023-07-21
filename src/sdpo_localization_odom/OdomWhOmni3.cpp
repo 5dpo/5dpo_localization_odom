@@ -1,9 +1,9 @@
-#include "sdpo_ros_odom/OdomWhOmni3.h"
+#include "sdpo_localization_odom/OdomWhOmni3.h"
 
 #include <exception>
 #include <cmath>
 
-namespace sdpo_ros_odom {
+namespace sdpo_localization_odom {
 
 OdomWhOmni3::OdomWhOmni3(const std::vector<size_t>& wh_idx,
     const std::vector<double>& wh_d, const std::vector<bool>& wh_inv,
@@ -148,4 +148,4 @@ void OdomWhOmni3::computeInvKin(const double& v, const double& vn,
   v_mot[kWhIdxB] = vn - rob_l[kRobLenIdx] * w;
 }
 
-} // namespace sdpo_ros_odom
+} // namespace sdpo_localization_odom

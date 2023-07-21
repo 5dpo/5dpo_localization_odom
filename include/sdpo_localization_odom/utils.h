@@ -4,7 +4,7 @@
 #include <vector>
 #include <cmath>
 
-namespace sdpo_ros_odom {
+namespace sdpo_localization_odom {
 
 inline float dist(float x, float y) {
   return sqrtf(x * x + y * y);
@@ -81,4 +81,4 @@ struct OdomDelta2D {
 
 std::vector<size_t> idx2valueVector(const std::vector<size_t>& vec_ini);
 
-} // namespace sdpo_ros_odom
+} // namespace sdpo_localization_odom

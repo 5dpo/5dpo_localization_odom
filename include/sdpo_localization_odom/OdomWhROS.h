@@ -9,9 +9,9 @@
 #include <sdpo_ros_interfaces_hw/mot_ref.h>
 #include <tf/transform_broadcaster.h>
 
-#include "sdpo_ros_odom/OdomWh.h"
+#include "sdpo_localization_odom/OdomWh.h"
 
-namespace sdpo_ros_odom {
+namespace sdpo_localization_odom {
 
 class OdomWhROS {
  public:
@@ -49,4 +49,4 @@ class OdomWhROS {
   void pubCmdVelRef();
 };
 
-} // namespace sdpo_ros_odom
+} // namespace sdpo_localization_odom

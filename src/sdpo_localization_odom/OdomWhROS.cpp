@@ -1,13 +1,13 @@
-#include "sdpo_ros_odom/OdomWhROS.h"
+#include "sdpo_localization_odom/OdomWhROS.h"
 
 #include <exception>
 #include <vector>
 
-#include "sdpo_ros_odom/OdomWhDiff.h"
-#include "sdpo_ros_odom/OdomWhOmni3.h"
-#include "sdpo_ros_odom/OdomWhOmni4.h"
+#include "sdpo_localization_odom/OdomWhDiff.h"
+#include "sdpo_localization_odom/OdomWhOmni3.h"
+#include "sdpo_localization_odom/OdomWhOmni4.h"
 
-namespace sdpo_ros_odom {
+namespace sdpo_localization_odom {
 
 static const std::string kOdomWhTypeOmni4Str = "omni4";
 
@@ -15,7 +15,7 @@ OdomWhROS::OdomWhROS() {
   try {
     readParam();
   } catch (std::exception& e) {
-    ROS_FATAL("[sdpo_ros_odom] Error reading the node parameters (%s)",
+    ROS_FATAL("[sdpo_localization_odom] Error reading the node parameters (%s)",
               e.what());
     ros::shutdown();
   }
@@ -37,14 +37,14 @@ bool OdomWhROS::readParam() {
   if (!nh_private.hasParam("steering_geometry")) {
     throw std::runtime_error(
         "[OdomWhROS.cpp] OdomWhROS::readParam: "
-        "the node sdpo_ros_odom requires the definition of the "
+        "the node sdpo_localization_odom requires the definition of the "
         "steering_geometry parameter");
   }
 
   auto print_is_default_param_set =
       [&nh_private](const std::string& param_name) {
         if (!nh_private.hasParam(param_name)) {
-          ROS_INFO("[sdpo_ros_odom] Parameter %s not set in the parameter "
+          ROS_INFO("[sdpo_localization_odom] Parameter %s not set in the parameter "
                    "server (using default value)",
                    param_name.c_str());
         }
@@ -53,24 +53,24 @@ bool OdomWhROS::readParam() {
   print_is_default_param_set("base_frame_id");
   nh_private.param<std::string>("base_frame_id", base_frame_id_,
                                 "base_footprint");
-  ROS_INFO("[sdpo_ros_odom] Base frame ID: %s", base_frame_id_.c_str());
+  ROS_INFO("[sdpo_localization_odom] Base frame ID: %s", base_frame_id_.c_str());
 
   print_is_default_param_set("odom_frame_id");
   nh_private.param<std::string>("odom_frame_id", odom_frame_id_,
                                 "odom");
-  ROS_INFO("[sdpo_ros_odom] Odom frame ID: %s", odom_frame_id_.c_str());
+  ROS_INFO("[sdpo_localization_odom] Odom frame ID: %s", odom_frame_id_.c_str());
 
   print_is_default_param_set("publish_tf");
   nh_private.param<bool>("publish_tf", publish_tf_, true);
-  ROS_INFO("[sdpo_ros_odom] Publish TF: %s",
+  ROS_INFO("[sdpo_localization_odom] Publish TF: %s",
            publish_tf_? "yes" : "no");
 
   nh_private.getParam("steering_geometry", steering_geometry_);
-  ROS_INFO("[sdpo_ros_odom] Steering geometry: %s", steering_geometry_.c_str());
+  ROS_INFO("[sdpo_localization_odom] Steering geometry: %s", steering_geometry_.c_str());
 
   print_is_default_param_set("w_ref_max_enabled");
   nh_private.param<bool>("w_ref_max_enabled", w_ref_max_enabled_, false);
-  ROS_INFO("[sdpo_ros_odom] Maximum angular speed enabled: %s",
+  ROS_INFO("[sdpo_localization_odom] Maximum angular speed enabled: %s",
            w_ref_max_enabled_? "yes" : "no");
 
   if (w_ref_max_enabled_) {
@@ -82,7 +82,7 @@ bool OdomWhROS::readParam() {
     }
 
     nh_private.getParam("w_ref_max", w_ref_max_);
-    ROS_INFO("[sdpo_ros_odom] Maximum wheel angular speed: %lf (rad/s)",
+    ROS_INFO("[sdpo_localization_odom] Maximum wheel angular speed: %lf (rad/s)",
              w_ref_max_);
   }
 
@@ -155,23 +155,23 @@ bool OdomWhROS::readParam() {
     odom_.reset(new OdomWhOmni4(wh_idx, wh_d, wh_inv, rob_len));
 
     // - print parameters
-    ROS_INFO("[sdpo_ros_odom]   Distance front-back: %lf m",
+    ROS_INFO("[sdpo_localization_odom]   Distance front-back: %lf m",
              odom_->rob_l[OdomWhOmni4::kRobLenIdxF2B]);
-    ROS_INFO("[sdpo_ros_odom]   Distance left-right: %lf m",
+    ROS_INFO("[sdpo_localization_odom]   Distance left-right: %lf m",
              odom_->rob_l[OdomWhOmni4::kRobLenIdxL2R]);
-    ROS_INFO("[sdpo_ros_odom]   Motor indexes (0 1 2 3): "
+    ROS_INFO("[sdpo_localization_odom]   Motor indexes (0 1 2 3): "
              "[%s %s %s %s] (FL|FR|BL|BR)",
              odom_->getMotorDriveIdxStr(0).c_str(),
              odom_->getMotorDriveIdxStr(1).c_str(),
              odom_->getMotorDriveIdxStr(2).c_str(),
              odom_->getMotorDriveIdxStr(3).c_str());
-    ROS_INFO("[sdpo_ros_odom]   Wheel diameters (FL FR BL BR): "
+    ROS_INFO("[sdpo_localization_odom]   Wheel diameters (FL FR BL BR): "
              "[%lf %lf %lf %lf] m",
              odom_->mot[OdomWhOmni4::kWhIdxFL].wh_d,
              odom_->mot[OdomWhOmni4::kWhIdxFR].wh_d,
              odom_->mot[OdomWhOmni4::kWhIdxBL].wh_d,
              odom_->mot[OdomWhOmni4::kWhIdxBR].wh_d);
-    ROS_INFO("[sdpo_ros_odom]   Wheel inverted (FL FR BL BR): "
+    ROS_INFO("[sdpo_localization_odom]   Wheel inverted (FL FR BL BR): "
              "[%d %d %d %d] (0|1)",
              odom_->mot[OdomWhOmni4::kWhIdxFL].inverted,
              odom_->mot[OdomWhOmni4::kWhIdxFR].inverted,
@@ -234,19 +234,19 @@ bool OdomWhROS::readParam() {
     odom_.reset(new OdomWhOmni3(wh_idx, wh_d, wh_inv, rob_len));
 
     // - print parameters
-    ROS_INFO("[sdpo_ros_odom]   Distance center-wheels: %lf m",
+    ROS_INFO("[sdpo_localization_odom]   Distance center-wheels: %lf m",
              odom_->rob_l[OdomWhOmni3::kRobLenIdx]);
-    ROS_INFO("[sdpo_ros_odom]   Motor indexes (0 1 2): "
+    ROS_INFO("[sdpo_localization_odom]   Motor indexes (0 1 2): "
              "[%s %s %s] (FR|FL|B)",
              odom_->getMotorDriveIdxStr(0).c_str(),
              odom_->getMotorDriveIdxStr(1).c_str(),
              odom_->getMotorDriveIdxStr(2).c_str());
-    ROS_INFO("[sdpo_ros_odom]   Wheel diameters (FR FL B): "
+    ROS_INFO("[sdpo_localization_odom]   Wheel diameters (FR FL B): "
              "[%lf %lf %lf] m",
              odom_->mot[OdomWhOmni3::kWhIdxFR].wh_d,
              odom_->mot[OdomWhOmni3::kWhIdxFL].wh_d,
              odom_->mot[OdomWhOmni3::kWhIdxB].wh_d);
-    ROS_INFO("[sdpo_ros_odom]   Wheel inverted (FR FL B): "
+    ROS_INFO("[sdpo_localization_odom]   Wheel inverted (FR FL B): "
              "[%d %d %d] (0|1)",
              odom_->mot[OdomWhOmni3::kWhIdxFR].inverted,
              odom_->mot[OdomWhOmni3::kWhIdxFL].inverted,
@@ -299,17 +299,17 @@ bool OdomWhROS::readParam() {
     odom_.reset(new OdomWhDiff(wh_idx, wh_d, wh_inv, rob_len));
 
     // - print parameters
-    ROS_INFO("[sdpo_ros_odom]   Distance between wheels: %lf m",
+    ROS_INFO("[sdpo_localization_odom]   Distance between wheels: %lf m",
              odom_->rob_l[OdomWhDiff::kRobLenIdx]);
-    ROS_INFO("[sdpo_ros_odom]   Motor indexes (0 1): "
+    ROS_INFO("[sdpo_localization_odom]   Motor indexes (0 1): "
              "[%s %s] (R|L)",
              odom_->getMotorDriveIdxStr(0).c_str(),
              odom_->getMotorDriveIdxStr(1).c_str());
-    ROS_INFO("[sdpo_ros_odom]   Wheel diameters (R L): "
+    ROS_INFO("[sdpo_localization_odom]   Wheel diameters (R L): "
              "[%lf %lf] m",
              odom_->mot[OdomWhDiff::kWhIdxR].wh_d,
              odom_->mot[OdomWhDiff::kWhIdxL].wh_d);
-    ROS_INFO("[sdpo_ros_odom]   Wheel inverted (R L): "
+    ROS_INFO("[sdpo_localization_odom]   Wheel inverted (R L): "
              "[%d %d] (0|1)",
              odom_->mot[OdomWhDiff::kWhIdxR].inverted,
              odom_->mot[OdomWhDiff::kWhIdxL].inverted);
@@ -374,7 +374,7 @@ void OdomWhROS::subMotEnc(const sdpo_ros_interfaces_hw::mot_enc_array& msg) {
     pub_odom_.publish(odom_msg);
 
   } catch (std::exception& e) {
-    ROS_ERROR("[sdpo_ros_odom] Error when processing the motor encoders data "
+    ROS_ERROR("[sdpo_localization_odom] Error when processing the motor encoders data "
               "message (%s)", e.what());
   }
 }
@@ -409,4 +409,4 @@ void OdomWhROS::pubCmdVelRef() {
   pub_cmd_vel_ref_.publish(cmd_vel_ref);
 }
 
-} // namespace sdpo_ros_odom
+} // namespace sdpo_localization_odom

@@ -1,8 +1,8 @@
-#include "sdpo_ros_odom/OdomWhMotorDrive.h"
+#include "sdpo_localization_odom/OdomWhMotorDrive.h"
 
 #include <cmath>
 
-namespace sdpo_ros_odom {
+namespace sdpo_localization_odom {
 
 void OdomWhMotorDrive::setEncTicksDelta(const int32_t& delta_ticks) {
   enc_ticks_delta = delta_ticks;
@@ -55,4 +55,4 @@ void OdomWhMotorDrive::setVr(const double& v_ref) {
   w_r = inverted? -lin2ang(v_r) : lin2ang(v_r);
 }
 
-} // namespace sdpo_ros_odom
+} // namespace sdpo_localization_odom

@@ -3,10 +3,10 @@
 #include <iostream>
 #include <vector>
 
-#include "sdpo_ros_odom/utils.h"
-#include "sdpo_ros_odom/OdomWhMotorDrive.h"
+#include "sdpo_localization_odom/utils.h"
+#include "sdpo_localization_odom/OdomWhMotorDrive.h"
 
-namespace sdpo_ros_odom {
+namespace sdpo_localization_odom {
 
 enum class OdomWhType {
   kUnknown,
@@ -173,4 +173,4 @@ class OdomWh {
   }
 };
 
-} // namespace sdpo_ros_odom
+} // namespace sdpo_localization_odom

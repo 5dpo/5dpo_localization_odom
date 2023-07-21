@@ -1,9 +1,9 @@
-#include "sdpo_ros_odom/utils.h"
+#include "sdpo_localization_odom/utils.h"
 
 #include <algorithm>
 #include <exception>
 
-namespace sdpo_ros_odom {
+namespace sdpo_localization_odom {
 
 std::vector<size_t> idx2valueVector(const std::vector<size_t>& vec_ini) {
   auto min_value_it = std::min_element(vec_ini.begin(), vec_ini.end());
@@ -31,4 +31,4 @@ std::vector<size_t> idx2valueVector(const std::vector<size_t>& vec_ini) {
   return std::move(vec_new);
 }
 
-} // namespace sdpo_ros_odom
+} // namespace sdpo_localization_odom

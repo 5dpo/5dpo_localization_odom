@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace sdpo_ros_odom {
+namespace sdpo_localization_odom {
 
 struct OdomWhMotorDrive {
  public:
@@ -39,4 +39,4 @@ struct OdomWhMotorDrive {
   void setVr(const double& v_ref);
 };
 
-} // sdpo_ros_odom
+} // sdpo_localization_odom
