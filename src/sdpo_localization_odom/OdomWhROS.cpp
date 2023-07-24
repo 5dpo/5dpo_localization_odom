@@ -3,6 +3,8 @@
 #include <exception>
 #include <vector>
 
+#include <tf2/LinearMath/Quaternion.h>
+
 #include "sdpo_localization_odom/OdomWhDiff.h"
 #include "sdpo_localization_odom/OdomWhOmni3.h"
 #include "sdpo_localization_odom/OdomWhOmni4.h"
@@ -27,6 +29,10 @@ OdomWhROS::OdomWhROS() : rclcpp::Node("sdpo_localization_odom_wh")
 
     return;
   }
+
+
+
+  tf_broad_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
 
 
 
@@ -527,33 +533,60 @@ void OdomWhROS::subMotEnc(
 
 
 
-    /*tf::StampedTransform odom2base_tf;
-    odom2base_tf.setOrigin(tf::Vector3(odom_->pose.x, odom_->pose.y, 0.0));
-    odom2base_tf.setRotation(tf::createQuaternionFromYaw(odom_->pose.th));
-    odom2base_tf.stamp_ = msg.stamp;
-    odom2base_tf.frame_id_ = odom_frame_id_;
-    odom2base_tf.child_frame_id_ = base_frame_id_;
+    geometry_msgs::msg::TransformStamped odom2base_tf;
+    tf2::Quaternion odom_rot_q;
 
-    if (publish_tf_) {
-      tf_broad_.sendTransform(odom2base_tf);
-    }*/
+    if (invert_tf_)
+    {
+      odom2base_tf.header.stamp = msg->stamp;
+      odom2base_tf.header.frame_id = base_frame_id_;
+      odom2base_tf.child_frame_id  = odom_frame_id_;
+
+      odom2base_tf.transform.translation.x = -odom_->pose.x;
+      odom2base_tf.transform.translation.y = -odom_->pose.y;
+      odom2base_tf.transform.translation.z = 0.0;
+
+      odom_rot_q.setRPY(0.0, 0.0, -odom_->pose.th);
+    }
+    else
+    {
+      odom2base_tf.header.stamp = msg->stamp;
+      odom2base_tf.header.frame_id = odom_frame_id_;
+      odom2base_tf.child_frame_id  = base_frame_id_;
+
+      odom2base_tf.transform.translation.x = odom_->pose.x;
+      odom2base_tf.transform.translation.y = odom_->pose.y;
+      odom2base_tf.transform.translation.z = 0.0;
+
+      odom_rot_q.setRPY(0.0, 0.0, odom_->pose.th);
+    }
+
+    odom2base_tf.transform.rotation.x = odom_rot_q.x();
+    odom2base_tf.transform.rotation.y = odom_rot_q.y();
+    odom2base_tf.transform.rotation.z = odom_rot_q.z();
+    odom2base_tf.transform.rotation.w = odom_rot_q.w();
+
+    if (publish_tf_)
+    {
+      tf_broad_->sendTransform(odom2base_tf);
+    }
 
 
 
     nav_msgs::msg::Odometry odom_msg;
-/*
-    odom_msg.header.stamp = odom2base_tf.stamp_;
-    odom_msg.header.frame_id = odom2base_tf.frame_id_;
-    odom_msg.child_frame_id = odom2base_tf.child_frame_id_;
-    odom_msg.pose.pose.position.x = odom2base_tf.getOrigin().x();
-    odom_msg.pose.pose.position.y = odom2base_tf.getOrigin().y();
-    odom_msg.pose.pose.position.z = odom2base_tf.getOrigin().z();
-    odom_msg.pose.pose.orientation.x = odom2base_tf.getRotation().x();
-    odom_msg.pose.pose.orientation.y = odom2base_tf.getRotation().y();
-    odom_msg.pose.pose.orientation.z = odom2base_tf.getRotation().z();
-    odom_msg.pose.pose.orientation.w = odom2base_tf.getRotation().w();
+
+    odom_msg.header.stamp = odom2base_tf.header.stamp;
+    odom_msg.header.frame_id = odom2base_tf.header.frame_id;
+    odom_msg.child_frame_id = odom2base_tf.child_frame_id;
+    odom_msg.pose.pose.position.x = odom2base_tf.transform.translation.x;
+    odom_msg.pose.pose.position.y = odom2base_tf.transform.translation.y;
+    odom_msg.pose.pose.position.z = odom2base_tf.transform.translation.z;
+    odom_msg.pose.pose.orientation.x = odom2base_tf.transform.rotation.x;
+    odom_msg.pose.pose.orientation.y = odom2base_tf.transform.rotation.y;
+    odom_msg.pose.pose.orientation.z = odom2base_tf.transform.rotation.z;
+    odom_msg.pose.pose.orientation.w = odom2base_tf.transform.rotation.w;
     odom_msg.twist.twist = odom_vel;
-*/
+
     pub_odom_->publish(odom_msg);
 
   }
@@ -577,7 +610,7 @@ void OdomWhROS::subCmdVel(const geometry_msgs::msg::Twist::SharedPtr msg)
 
   sdpo_drivers_interfaces::msg::MotRefArray mot_ref_msg;
 
-  mot_ref_msg.stamp = this->get_clock()->now();
+  mot_ref_msg.stamp = this->now();
   mot_ref_msg.ang_speed_ref.resize(odom_->mot.size());
 
   for(size_t i = 0; i < odom_->mot.size(); i++) {

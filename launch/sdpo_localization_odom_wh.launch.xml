@@ -19,7 +19,7 @@
 
 
 
-    <!-- <param name="steering_geometry" value="omni4"/>
+    <param name="steering_geometry" value="omni4"/>
 
     <param name="rob_dist_between_front_back_wh" value="0.265"/>
     <param name="rob_dist_between_left_right_wh" value="0.270"/>
@@ -34,7 +34,7 @@
     <param name="wh_back_left_inv"    value="true"/>
     <param name="wh_back_right_diam"  value="0.102"/>
     <param name="wh_back_right_idx"   value="0"/>
-    <param name="wh_back_right_inv"   value="true"/> -->
+    <param name="wh_back_right_inv"   value="true"/>
 
 
 
@@ -53,7 +53,7 @@
 
 
 
-    <param name="steering_geometry" value="diff"/>
+    <!-- <param name="steering_geometry" value="diff"/>
 
     <param name="rob_dist_between_wh" value="0.20"/>
     <param name="wh_right_diam" value="0.06"/>
@@ -61,7 +61,7 @@
     <param name="wh_right_inv"  value="true"/>
     <param name="wh_left_diam"  value="0.06"/>
     <param name="wh_left_idx"   value="1"/>
-    <param name="wh_left_inv"   value="false"/>
+    <param name="wh_left_inv"   value="false"/> -->
 
   </node>
 
