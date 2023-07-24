@@ -111,6 +111,8 @@ void OdomWhDiff::computeInvKin(const double& v, const double& vn,
   v_mot.resize(2);
   v_mot[kWhIdxR] = -v - 0.5 * rob_l[kRobLenIdx] * w;
   v_mot[kWhIdxL] =  v - 0.5 * rob_l[kRobLenIdx] * w;
+
+  (void) vn;
 }
 
 } // namespace sdpo_localization_odom
