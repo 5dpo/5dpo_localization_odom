@@ -75,7 +75,7 @@ class OdomWhROS : public rclcpp::Node
 
  private:
 
-  bool readParam();
+  void readParam();
 
   void subMotEnc(
       const sdpo_drivers_interfaces::msg::MotEncArray::SharedPtr msg);

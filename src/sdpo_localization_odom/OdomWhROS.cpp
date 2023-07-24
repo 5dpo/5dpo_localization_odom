@@ -24,6 +24,8 @@ OdomWhROS::OdomWhROS() : rclcpp::Node("sdpo_localization_odom_wh")
                  "Error reading the node parameters (%s)", e.what());
 
     rclcpp::shutdown();
+
+    return;
   }
 
 
@@ -51,7 +53,7 @@ OdomWhROS::OdomWhROS() : rclcpp::Node("sdpo_localization_odom_wh")
 
 
 
-bool OdomWhROS::readParam() {
+void OdomWhROS::readParam() {
 
   this->declare_parameter<std::string>("base_frame_id", "base_footprint");
   this->declare_parameter<std::string>("odom_frame_id", "odom");
@@ -209,27 +211,27 @@ bool OdomWhROS::readParam() {
   }
   else if (steering_geometry_ == kOdomWhOmni3Str)
   {
-    this->declare_parameter("omni3_rob_dist_center_wh");
-    this->declare_parameter("omni3_wh_front_right_diam");
-    this->declare_parameter("omni3_wh_front_right_idx");
-    this->declare_parameter("omni3_wh_front_right_inv");
-    this->declare_parameter("omni3_wh_front_left_diam");
-    this->declare_parameter("omni3_wh_front_left_idx");
-    this->declare_parameter("omni3_wh_front_left_inv");
-    this->declare_parameter("omni3_wh_back_diam");
-    this->declare_parameter("omni3_wh_back_idx");
-    this->declare_parameter("omni3_wh_back_inv");
+    this->declare_parameter("rob_dist_center_wh");
+    this->declare_parameter("wh_front_right_diam");
+    this->declare_parameter("wh_front_right_idx");
+    this->declare_parameter("wh_front_right_inv");
+    this->declare_parameter("wh_front_left_diam");
+    this->declare_parameter("wh_front_left_idx");
+    this->declare_parameter("wh_front_left_inv");
+    this->declare_parameter("wh_back_diam");
+    this->declare_parameter("wh_back_idx");
+    this->declare_parameter("wh_back_inv");
 
-    if (!this->has_parameter("omni3_rob_dist_center_wh") ||
-        !this->has_parameter("omni3_wh_front_right_diam") ||
-        !this->has_parameter("omni3_wh_front_right_idx") ||
-        !this->has_parameter("omni3_wh_front_right_inv") ||
-        !this->has_parameter("omni3_wh_front_left_diam") ||
-        !this->has_parameter("omni3_wh_front_left_idx") ||
-        !this->has_parameter("omni3_wh_front_left_inv") ||
-        !this->has_parameter("omni3_wh_back_diam") ||
-        !this->has_parameter("omni3_wh_back_idx") ||
-        !this->has_parameter("omni3_wh_back_inv"))
+    if (!this->has_parameter("rob_dist_center_wh") ||
+        !this->has_parameter("wh_front_right_diam") ||
+        !this->has_parameter("wh_front_right_idx") ||
+        !this->has_parameter("wh_front_right_inv") ||
+        !this->has_parameter("wh_front_left_diam") ||
+        !this->has_parameter("wh_front_left_idx") ||
+        !this->has_parameter("wh_front_left_inv") ||
+        !this->has_parameter("wh_back_diam") ||
+        !this->has_parameter("wh_back_idx") ||
+        !this->has_parameter("wh_back_inv"))
     {
       throw std::runtime_error(
           "[OdomWhROS.cpp] OdomWhROS::readParam: "
@@ -287,25 +289,25 @@ bool OdomWhROS::readParam() {
 
 
 
-    odom_.reset(new OdomWhOmni4(wh_idx, wh_d, wh_inv, rob_len));
+    odom_.reset(new OdomWhOmni3(wh_idx, wh_d, wh_inv, rob_len));
   }
   else if (steering_geometry_ == kOdomWhDiffStr)
   {
-    this->declare_parameter("diff_rob_dist_between_wh");
-    this->declare_parameter("diff_wh_right_diam");
-    this->declare_parameter("diff_wh_right_idx");
-    this->declare_parameter("diff_wh_right_inv");
-    this->declare_parameter("diff_wh_left_diam");
-    this->declare_parameter("diff_wh_left_idx");
-    this->declare_parameter("diff_wh_left_inv");
+    this->declare_parameter("rob_dist_between_wh");
+    this->declare_parameter("wh_right_diam");
+    this->declare_parameter("wh_right_idx");
+    this->declare_parameter("wh_right_inv");
+    this->declare_parameter("wh_left_diam");
+    this->declare_parameter("wh_left_idx");
+    this->declare_parameter("wh_left_inv");
 
-    if (!this->has_parameter("diff_rob_dist_between_wh") ||
-        !this->has_parameter("diff_wh_right_diam") ||
-        !this->has_parameter("diff_wh_right_idx") ||
-        !this->has_parameter("diff_wh_right_inv") ||
-        !this->has_parameter("diff_wh_left_diam") ||
-        !this->has_parameter("diff_wh_left_idx") ||
-        !this->has_parameter("diff_wh_left_inv"))
+    if (!this->has_parameter("rob_dist_between_wh") ||
+        !this->has_parameter("wh_right_diam") ||
+        !this->has_parameter("wh_right_idx") ||
+        !this->has_parameter("wh_right_inv") ||
+        !this->has_parameter("wh_left_diam") ||
+        !this->has_parameter("wh_left_idx") ||
+        !this->has_parameter("wh_left_inv"))
     {
       throw std::runtime_error(
           "[OdomWhROS.cpp] OdomWhROS::readParam: "
@@ -352,7 +354,7 @@ bool OdomWhROS::readParam() {
 
 
 
-    odom_.reset(new OdomWhOmni4(wh_idx, wh_d, wh_inv, rob_len));
+    odom_.reset(new OdomWhDiff(wh_idx, wh_d, wh_inv, rob_len));
   }
   /// @todo TRYCLE STEERING GEOMETRY
   /*else if (steering_geometry_ == tricycle)
@@ -405,7 +407,8 @@ bool OdomWhROS::readParam() {
 
 
 
-  RCLCPP_INFO(this->get_logger(), "Steering geometry: %s", steering_geometry_);
+  RCLCPP_INFO(this->get_logger(),
+              "Steering geometry: %s", steering_geometry_.c_str());
 
 
 
@@ -491,7 +494,7 @@ bool OdomWhROS::readParam() {
                 odom_->mot[OdomWhDiff::kWhIdxR].inverted,
                 odom_->mot[OdomWhDiff::kWhIdxL].inverted);
   }
-};
+}
 
 
 
@@ -501,7 +504,7 @@ void OdomWhROS::subMotEnc(
 
   try
   {
-    for(int i = 0; i < msg->mot_enc.size(); i++)
+    for(size_t i = 0; i < msg->mot_enc.size(); i++)
     {
       odom_->setMotorDriveEncTicksDelta(
           i, msg->mot_enc[i].enc_delta, msg->mot_enc[i].ticks_per_rev);
@@ -577,7 +580,7 @@ void OdomWhROS::subCmdVel(const geometry_msgs::msg::Twist::SharedPtr msg)
   mot_ref_msg.stamp = this->get_clock()->now();
   mot_ref_msg.ang_speed_ref.resize(odom_->mot.size());
 
-  for(int i = 0; i < odom_->mot.size(); i++) {
+  for(size_t i = 0; i < odom_->mot.size(); i++) {
     mot_ref_msg.ang_speed_ref[i].ref = odom_->getMotorDriveWr(i);
   }
 

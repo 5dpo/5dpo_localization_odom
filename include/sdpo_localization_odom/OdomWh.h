@@ -31,8 +31,6 @@ class OdomWh {
 
  public:
   OdomWh() = default;
-  OdomWh(const std::vector<size_t>& wh_idx, const std::vector<double>& wh_d,
-      const std::vector<bool>& wh_inv, const std::vector<double>& rob_len) { }
 
   inline virtual OdomWhType getOdomWhType() const {
     return OdomWhType::kUnknown;
