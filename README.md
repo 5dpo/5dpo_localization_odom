@@ -1,4 +1,4 @@
-# [5dpo_ros_odom](https://github.com/5dpo/5dpo_ros_odom)
+# [5dpo_localization_odom](https://github.com/5dpo/5dpo_localization_odom)
 
 This repository implements a data processor for the estimation of the robot pose
 based on odometric-only data (e.g., wheeled, laser, visual, and/or inertial
@@ -24,18 +24,24 @@ reckoning pose estimation of the robot.
 
 ## ROS
 
-**Current version:**
+**foxy**
 
-- [Ubuntu 20.04.5 LTS](https://releases.ubuntu.com/focal/)
-- [ROS Noetic](https://wiki.ros.org/noetic)
+- [Ubuntu 20.04.6 LTS](https://releases.ubuntu.com/focal/)
+- [ROS 2 Foxy](https://docs.ros.org/en/foxy/)
+
+**noetic**
+
+- [Ubuntu 20.04.6 LTS](https://releases.ubuntu.com/focal/)
+- [ROS 1 Noetic](https://wiki.ros.org/noetic/)
 
 ### Dependencies
 
-- [roscpp](https://wiki.ros.org/roscpp)
-- [geometry_msgs](https://wiki.ros.org/geometry_msgs)
-- [nav_msgs](https://wiki.ros.org/nav_msgs)
-- [sdpo_ros_interfaces_hw](https://github.com/5dpo/5dpo_ros_interfaces)
-- [tf](https://wiki.ros.org/tf)
+- [rclcpp](https://index.ros.org/r/rclcpp/)
+- [geometry_msgs](https://index.ros.org/p/geometry_msgs/)
+- [nav_msgs](https://index.ros.org/p/nav_msgs/)
+- [sdpo_drivers_interfaces](https://github.com/5dpo/5dpo_drivers_interfaces)
+- [tf2](https://index.ros.org/p/tf2/)
+- [tf2_ros](https://index.ros.org/p/tf2_ros/)
 
 ### Parameters
 
@@ -45,11 +51,13 @@ reckoning pose estimation of the robot.
   coordinate frame
 - publish_tf (`bool = true`): enable the publication of the tf
   base_frame_id > odom_frame_id
-- steering_geometry: steering geometry of the mobile robot
+- invert_tf (`bool = false`): enable the invertion of the tf (odom_frame_id >
+  base_frame_id instead of base_frame_id > odom_frame_id)
+- w_ref_max_enabled (`bool = false`): enable a maximum angular speed for the
+  robot wheels
+- w_ref_max (`double`): maximum angular speed of the robot wheels
+- steering_geometry: steering geometry of the mobile robot (rad/s)
   (`"diff" | "tricyc" | "omni3" | "omni4"`)
-  - w_ref_max_enabled (`bool = false`): enable a maximum angular speed for the
-    robot wheels
-  - w_ref_max (`double`): maximum angular speed of the robot wheels
   - Differential drive
     - rob_dist_between_wh (`double`): distance between left-right wheels (m)
     - wh_right_diam (`double`): right wheel diameter (m)
@@ -120,21 +128,18 @@ reckoning pose estimation of the robot.
 ### Subscribes
 
 - cmd_vel
-  ([Twist.msg](https://docs.ros.org/en/noetic/api/geometry_msgs/html/msg/Twist.html))
-
-**sdpo_ros_odom_wh**
-
-- motors_encoders
-  ([mot_enc_array.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_enc_array.msg))
+  ([Twist.msg](https://docs.ros2.org/foxy/api/geometry_msgs/msg/Twist.html))
+- motors_enc
+  ([MotEncArray.msg](https://github.com/5dpo/5dpo_drivers_interfaces/blob/foxy/msg/MotEncArray.msg))
 
 ### Publishes
 
 - cmd_vel_ref
-  ([Twist.msg](https://docs.ros.org/en/noetic/api/geometry_msgs/html/msg/Twist.html))
+  ([Twist.msg](https://docs.ros2.org/foxy/api/geometry_msgs/msg/Twist.html))
 - motors_ref
-  ([mot_ref.msg](https://github.com/5dpo/5dpo_ros_interfaces/blob/main/5dpo_ros_interfaces_hw/msg/mot_ref.msg))
+  ([MotRefArray.msg](https://github.com/5dpo/5dpo_drivers_interfaces/blob/foxy/msg/MotRefArray.msg))
 - odom
-  ([Odometry.msg](https://docs.ros.org/en/noetic/api/nav_msgs/html/msg/Odometry.html))
+  ([Odometry.msg](https://docs.ros2.org/foxy/api/nav_msgs/msg/Odometry.html))
 - tf (N/A)
   - base_frame_id > odom_frame_id
 
@@ -151,39 +156,35 @@ None.
 ### Build
 
 ```sh
-# Create catkin workspace
-mkdir -p ~/catkin_ws/src
+# ROS 2
+source /opt/ros/foxy/setup.bash
 
-# Clone repository
-cd ~/catkin_ws/src
-git clone git@github.com:5dpo/5dpo_ros_odom.git
+# Create workspace
+mkdir -p ~/ros2_ws/src
+
+# Clone the repository
+cd ~/ros2_ws/src
+git clone git@github.com:5dpo/5dpo_localization_odom.git
 
 # Build
-cd ..
-catkin build
-# OR catkin_make_isolated (more slow, build and check dependencies individually)
-# OR catkin build (requires catkin tools)
+colcon build
+source install/setup.bash
 ```
 
 ### Launch
 
-**sdpo_ros_odom_wh**
+**sdpo_localization_odom_wh**
 
 ```sh
-roslaunch sdpo_ros_odom sdpo_ros_odom_wh.launch
+ros2 launch sdpo_localization_odom sdpo_localization_odom_wh.launch.xml
 ```
+
+## Acknowledges
+
+- [Faculty of Engineering, University of Porto (FEUP)](https://sigarra.up.pt/feup/en/)
+- [INESC TEC - Institute for Systems and Computer Engineering, Technology and Science](https://www.inesctec.pt/en/)
 
 ## Contacts
 
 If you have any questions or you want to know more about this work, please
-contact one of the contributors of this package:
-
-- Héber Miguel Sobreira ([github](https://github.com/HeberSobreira),
-  [gitlab](https://gitlab.inesctec.pt/heber.m.sobreira),
-  [mail](mailto:heber.m.sobreira@inesctec.pt))
-- Ricardo B. Sousa ([github](https://github.com/sousarbarb/),
-  [gitlab](https://gitlab.inesctec.pt/ricardo.b.sousa),
-  [mail:inesctec](mailto:ricardo.b.sousa@inesctec.pt),
-  [mail:personal](mailto:sousa.ricardob@outlook.com),
-  [mail:professor](mailto:rbs@fe.up.pt),
-  [mail:student](mailto:up201503004@edu.fe.up.pt))
+contact any member of the 5dpo Robotics Team.
