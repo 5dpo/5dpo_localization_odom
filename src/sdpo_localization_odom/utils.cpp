@@ -28,7 +28,7 @@ std::vector<size_t> idx2valueVector(const std::vector<size_t>& vec_ini) {
     vec_new[i] = std::find(vec_ini.begin(), vec_ini.end(), i) - vec_ini.begin();
   }
 
-  return std::move(vec_new);
+  return vec_new;
 }
 
 } // namespace sdpo_localization_odom
