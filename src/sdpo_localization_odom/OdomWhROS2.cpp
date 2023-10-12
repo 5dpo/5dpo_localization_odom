@@ -1,4 +1,4 @@
-#include "sdpo_localization_odom/OdomWhROS.h"
+#include "sdpo_localization_odom/OdomWhROS2.h"
 
 #include <exception>
 #include <vector>
@@ -13,7 +13,7 @@ namespace sdpo_localization_odom {
 
 
 
-OdomWhROS::OdomWhROS() : rclcpp::Node("sdpo_localization_odom_wh")
+OdomWhROS2::OdomWhROS2() : rclcpp::Node("sdpo_localization_odom_wh")
 {
 
   try
@@ -49,17 +49,17 @@ OdomWhROS::OdomWhROS() : rclcpp::Node("sdpo_localization_odom_wh")
   sub_mot_enc_ = this->create_subscription
       <sdpo_drivers_interfaces::msg::MotEncArray>(
           "motors_enc", 10,
-          std::bind(&OdomWhROS::subMotEnc, this, std::placeholders::_1));
+          std::bind(&OdomWhROS2::subMotEnc, this, std::placeholders::_1));
 
   sub_cmd_vel_ = this->create_subscription<geometry_msgs::msg::Twist>(
       "cmd_vel", 10,
-      std::bind(&OdomWhROS::subCmdVel, this, std::placeholders::_1));
+      std::bind(&OdomWhROS2::subCmdVel, this, std::placeholders::_1));
 
 }
 
 
 
-void OdomWhROS::readParam() {
+void OdomWhROS2::readParam() {
 
   this->declare_parameter<std::string>("base_frame_id", "base_footprint");
   this->declare_parameter<std::string>("odom_frame_id", "odom");
@@ -78,7 +78,7 @@ void OdomWhROS::readParam() {
   if (!this->has_parameter("steering_geometry"))
   {
     throw std::runtime_error(
-        "[OdomWhROS.cpp] OdomWhROS::readParam: "
+        "[OdomWhROS2.cpp] OdomWhROS2::readParam: "
         "the node sdpo_localization_odom requires the definition of the "
         "steering_geometry parameter");
   }
@@ -102,7 +102,7 @@ void OdomWhROS::readParam() {
     if (!this->has_parameter("w_ref_max"))
     {
       throw std::runtime_error(
-          "[OdomWhROS.cpp] OdomWhROS::readParam: "
+          "[OdomWhROS2.cpp] OdomWhROS2::readParam: "
           "if the maximum angular speed is enabled, the parameter w_ref_max "
           "must be set");
     }
@@ -149,7 +149,7 @@ void OdomWhROS::readParam() {
         !this->has_parameter("wh_back_right_inv"))
     {
       throw std::runtime_error(
-          "[OdomWhROS.cpp] OdomWhROS::readParam: "
+          "[OdomWhROS2.cpp] OdomWhROS2::readParam: "
           "the steering geometry " + steering_geometry_ + " requires the "
           "definition of the following parameters: "
           "rob_dist_between_front_back_wh, rob_dist_between_left_right_wh, "
@@ -240,7 +240,7 @@ void OdomWhROS::readParam() {
         !this->has_parameter("wh_back_inv"))
     {
       throw std::runtime_error(
-          "[OdomWhROS.cpp] OdomWhROS::readParam: "
+          "[OdomWhROS2.cpp] OdomWhROS2::readParam: "
           "the steering geometry " + steering_geometry_ + " requires the "
           "definition of the following parameters: "
           "rob_dist_center_wh, "
@@ -316,7 +316,7 @@ void OdomWhROS::readParam() {
         !this->has_parameter("wh_left_inv"))
     {
       throw std::runtime_error(
-          "[OdomWhROS.cpp] OdomWhROS::readParam: "
+          "[OdomWhROS2.cpp] OdomWhROS2::readParam: "
           "the steering geometry " + steering_geometry_ + " requires the "
           "definition of the following parameters: "
           "rob_dist_between_wh, "
@@ -376,7 +376,7 @@ void OdomWhROS::readParam() {
   else
   {
     throw std::runtime_error(
-        "[OdomWhROS.cpp] OdomWhROS::readParam: "
+        "[OdomWhROS2.cpp] OdomWhROS2::readParam: "
         "invalid steering_geometry (check documentation for supported ones)");
   }
 
@@ -504,7 +504,7 @@ void OdomWhROS::readParam() {
 
 
 
-void OdomWhROS::subMotEnc(
+void OdomWhROS2::subMotEnc(
     const sdpo_drivers_interfaces::msg::MotEncArray::SharedPtr msg)
 {
 
@@ -601,7 +601,7 @@ void OdomWhROS::subMotEnc(
 
 
 
-void OdomWhROS::subCmdVel(const geometry_msgs::msg::Twist::SharedPtr msg)
+void OdomWhROS2::subCmdVel(const geometry_msgs::msg::Twist::SharedPtr msg)
 {
 
   odom_->setVelRef(msg->linear.x, msg->linear.y, msg->angular.z);
@@ -629,7 +629,7 @@ void OdomWhROS::subCmdVel(const geometry_msgs::msg::Twist::SharedPtr msg)
 
 
 
-void OdomWhROS::pubCmdVelRef() {
+void OdomWhROS2::pubCmdVelRef() {
 
   geometry_msgs::msg::Twist cmd_vel_ref;
 

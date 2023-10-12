@@ -13,7 +13,7 @@
 
 namespace sdpo_localization_odom {
 
-class OdomWhROS : public rclcpp::Node
+class OdomWhROS2 : public rclcpp::Node
 {
 
  public:
@@ -67,9 +67,9 @@ class OdomWhROS : public rclcpp::Node
 
  public:
 
-  OdomWhROS();
+  OdomWhROS2();
 
-  ~OdomWhROS() = default;
+  ~OdomWhROS2() = default;
 
 
 
