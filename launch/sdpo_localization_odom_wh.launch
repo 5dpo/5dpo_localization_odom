@@ -1,0 +1,71 @@
+<launch>
+
+  <arg name="robot_id" default="$(optenv ROBOT_ID unnamed_robot)"/>
+
+
+
+  <group ns="$(arg robot_id)">
+
+    <node pkg="sdpo_localization_odom" type="sdpo_localization_odom_wh"
+        name="sdpo_localization_odom" output="screen">
+
+      <param name="base_frame_id" value="$(arg robot_id)/base_footprint"/>
+      <param name="odom_frame_id" value="$(arg robot_id)/odom"/>
+
+      <param name="publish_tf" value="true"/>
+      <param name="invert_tf"  value="false"/>
+
+      <param name="w_ref_max_enabled" value="false"/>
+      <!-- <param name="w_ref_max" value="false"/> -->
+
+
+
+      <param name="steering_geometry" value="omni4"/>
+
+      <param name="rob_dist_between_front_back_wh" value="0.265"/>
+      <param name="rob_dist_between_left_right_wh" value="0.270"/>
+      <param name="wh_front_left_diam"  value="0.102"/>
+      <param name="wh_front_left_idx"   value="3"/>
+      <param name="wh_front_left_inv"   value="true"/>
+      <param name="wh_front_right_diam" value="0.102"/>
+      <param name="wh_front_right_idx"  value="2"/>
+      <param name="wh_front_right_inv"  value="true"/>
+      <param name="wh_back_left_diam"   value="0.102"/>
+      <param name="wh_back_left_idx"    value="1"/>
+      <param name="wh_back_left_inv"    value="true"/>
+      <param name="wh_back_right_diam"  value="0.102"/>
+      <param name="wh_back_right_idx"   value="0"/>
+      <param name="wh_back_right_inv"   value="true"/>
+
+
+
+      <!-- <param name="steering_geometry" value="omni3"/>
+
+      <param name="rob_dist_center_wh"  value="0.191367"/>
+      <param name="wh_front_right_diam" value="0.098566"/>
+      <param name="wh_front_right_idx"  value="0"/>
+      <param name="wh_front_right_inv"  value="true"/>
+      <param name="wh_front_left_diam"  value="0.098566"/>
+      <param name="wh_front_left_idx"   value="1"/>
+      <param name="wh_front_left_inv"   value="true"/>
+      <param name="wh_back_diam" value="0.098566"/>
+      <param name="wh_back_idx"  value="2"/>
+      <param name="wh_back_inv"  value="true"/> -->
+
+
+
+      <!-- <param name="steering_geometry" value="diff"/>
+
+      <param name="rob_dist_between_wh" value="0.20"/>
+      <param name="wh_right_diam" value="0.06"/>
+      <param name="wh_right_idx"  value="0"/>
+      <param name="wh_right_inv"  value="true"/>
+      <param name="wh_left_diam"  value="0.06"/>
+      <param name="wh_left_idx"   value="1"/>
+      <param name="wh_left_inv"   value="false"/> -->
+
+    </node>
+
+  </group>
+
+</launch>

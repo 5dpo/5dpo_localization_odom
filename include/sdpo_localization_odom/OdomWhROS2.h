@@ -16,12 +16,6 @@ namespace sdpo_localization_odom {
 class OdomWhROS2 : public rclcpp::Node
 {
 
- public:
-
-  static const std::string kOdomWhTypeOmni4Str;
-
-
-
  private:
 
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr pub_cmd_vel_ref_;

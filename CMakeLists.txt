@@ -103,6 +103,99 @@ if("$ENV{ROS_VERSION}" STREQUAL "2")
 
 elseif("$ENV{ROS_VERSION}" STREQUAL "1")
 
+  message(AUTHOR_WARNING "Project version in ROS 1 may be deprecated")
+
+  # Find catkin macros and libraries
+  find_package(catkin REQUIRED COMPONENTS
+    roscpp
+    geometry_msgs
+    nav_msgs
+    sdpo_drivers_interfaces
+    tf2
+    tf2_ros
+  )
+
+  # Catkin specific configuration
+  catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES ${PROJECT_NAME}_wh
+    CATKIN_DEPENDS
+      roscpp
+      geometry_msgs
+      nav_msgs
+      sdpo_drivers_interfaces
+      tf2
+      tf2_ros
+    # DEPENDS system_lib
+  )
+
+  # Build
+  # - additional header files
+  include_directories(
+    include
+    ${catkin_INCLUDE_DIRS}
+  )
+
+  # - declare a C++ library
+  # add_executable(${PROJECT_NAME}_wh
+  #   src/${PROJECT_NAME}/OdomWhMotorDrive.cpp
+  #   src/${PROJECT_NAME}/OdomWhDiff.cpp
+  #   src/${PROJECT_NAME}/OdomWhOmni3.cpp
+  #   src/${PROJECT_NAME}/OdomWhOmni4.cpp
+  #   src/${PROJECT_NAME}/OdomWhROS1.cpp
+  #   src/${PROJECT_NAME}/utils.cpp
+  # )
+
+  # - declare a C++ executable
+  add_executable(${PROJECT_NAME}_wh
+    src/${PROJECT_NAME}/OdomWhMotorDrive.cpp
+    src/${PROJECT_NAME}/OdomWhDiff.cpp
+    src/${PROJECT_NAME}/OdomWhOmni3.cpp
+    src/${PROJECT_NAME}/OdomWhOmni4.cpp
+    src/${PROJECT_NAME}/OdomWhROS1.cpp
+    src/${PROJECT_NAME}/utils.cpp
+    src/main_ros1_odom_wh.cpp
+  )
+
+  # - target dependencies
+  add_dependencies(${PROJECT_NAME}_wh
+    ${${PROJECT_NAME}_EXPORTED_TARGETS}
+    ${catkin_EXPORTED_TARGETS}
+  )
+
+  # add_dependencies(${PROJECT_NAME}      # for the library
+  #   ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  #   ${catkin_EXPORTED_TARGETS}
+  # )
+
+  # - specify linking libraries
+  target_link_libraries(${PROJECT_NAME}_wh
+    ${catkin_LIBRARIES}
+  )
+
+  # - installation rules
+  install(TARGETS ${PROJECT_NAME}_wh
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
+
+  # install(TARGETS ${PROJECT_NAME}       # for the library
+  #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  #   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+  # )
+
+  install(DIRECTORY include/${PROJECT_NAME}/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+    FILES_MATCHING PATTERN "*.h"
+    PATTERN ".svn" EXCLUDE
+  )
+
+  install(
+    DIRECTORY launch
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  )
+
+
 
 ##########################
 #####  !!! ERROR !!! #####
