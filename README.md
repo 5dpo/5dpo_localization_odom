@@ -21,22 +21,25 @@ reckoning pose estimation of the robot.
 
 - Wheeled odometry (tricycle steering geometry)
 - Fusion of wheels and inertial odometry data
+- Dynamic reconfigure of the nodes parameters
+- Additional parameter for covariance (wheeled-inertial odometry fusion)
 
 ## ROS
 
-**foxy**
+**ROS 1**
+
+- [Ubuntu 20.04.6 LTS](https://releases.ubuntu.com/focal/)
+- [ROS Noetic](https://wiki.ros.org/noetic)
+
+**ROS 2**
 
 - [Ubuntu 20.04.6 LTS](https://releases.ubuntu.com/focal/)
 - [ROS 2 Foxy](https://docs.ros.org/en/foxy/)
 
-**noetic**
-
-- [Ubuntu 20.04.6 LTS](https://releases.ubuntu.com/focal/)
-- [ROS 1 Noetic](https://wiki.ros.org/noetic/)
-
 ### Dependencies
 
-- [rclcpp](https://index.ros.org/r/rclcpp/)
+- [rclcpp](https://index.ros.org/r/rclcpp/) (_ROS 2_)
+- [roscpp](https://wiki.ros.org/roscpp/) (_ROS 1_)
 - [geometry_msgs](https://index.ros.org/p/geometry_msgs/)
 - [nav_msgs](https://index.ros.org/p/nav_msgs/)
 - [sdpo_drivers_interfaces](https://github.com/5dpo/5dpo_drivers_interfaces)
@@ -127,20 +130,15 @@ reckoning pose estimation of the robot.
 
 ### Subscribes
 
-- cmd_vel
-  ([Twist.msg](https://docs.ros2.org/foxy/api/geometry_msgs/msg/Twist.html))
-- motors_enc
-  ([MotEncArray.msg](https://github.com/5dpo/5dpo_drivers_interfaces/blob/foxy/msg/MotEncArray.msg))
+- cmd_vel (`geometry_msgs::Twist.msg`)
+- motors_enc (`sdpo_drivers_interfaces::MotEncArray.msg`)
 
 ### Publishes
 
-- cmd_vel_ref
-  ([Twist.msg](https://docs.ros2.org/foxy/api/geometry_msgs/msg/Twist.html))
-- motors_ref
-  ([MotRefArray.msg](https://github.com/5dpo/5dpo_drivers_interfaces/blob/foxy/msg/MotRefArray.msg))
-- odom
-  ([Odometry.msg](https://docs.ros2.org/foxy/api/nav_msgs/msg/Odometry.html))
-- tf (N/A)
+- cmd_vel_ref (`geometry_msgs::Twist.msg`)
+- motors_ref (`sdpo_drivers_interfaces::MotRefArray.msg`)
+- odom (`nav_msgs::Odometry.msg`)
+- tf2 (N/A)
   - base_frame_id > odom_frame_id
 
 ### Services
@@ -153,10 +151,33 @@ None.
 
 ## Usage
 
-### Build
+### Compilation
+
+**ROS 1**
 
 ```sh
-# ROS 2
+# ROS 1 environment setup
+source source /opt/ros/noetic/setup.bash
+
+# Create workspace
+mkdir -p ~/ros1_ws/src
+
+# Clone the repository
+cd ~/ros1_ws/src
+git clone git@github.com:5dpo/5dpo_localization_odom.git
+
+# Build
+cd ~/ros1_ws
+catkin_make
+# OR catkin_make_isolated (more slow, build and check dependencies individually)
+# OR catkin build (requires the Pyhton-based catkin tools)
+source devel/setup.bash
+```
+
+**ROS 2**
+
+```sh
+# ROS 2 environment setup
 source /opt/ros/foxy/setup.bash
 
 # Create workspace
@@ -167,16 +188,23 @@ cd ~/ros2_ws/src
 git clone git@github.com:5dpo/5dpo_localization_odom.git
 
 # Build
+cd ~/ros2_ws
 colcon build
 source install/setup.bash
 ```
 
 ### Launch
 
-**sdpo_localization_odom_wh**
+**ROS 1**
 
 ```sh
-ros2 launch sdpo_localization_odom sdpo_localization_odom_wh.launch.xml
+roslaunch sdpo_localization_odom sdpo_localization_odom_wh.launch
+```
+
+**ROS 2**
+
+```sh
+ros2 launch sdpo_hangfaq2_driver sdpo_localization_odom_wh.launch.xml
 ```
 
 ## Acknowledges
@@ -187,4 +215,4 @@ ros2 launch sdpo_localization_odom sdpo_localization_odom_wh.launch.xml
 ## Contacts
 
 If you have any questions or you want to know more about this work, please
-contact any member of the 5dpo Robotics Team.
+contact any member of the [5dpo Robotics Team](https://5dpo.github.io/).
